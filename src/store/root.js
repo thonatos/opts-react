@@ -13,7 +13,6 @@ class root {
 
     // persist
     const { app, auth } = this
-    console.log(app, auth)
     const hydrate = create({
       // storage: localforage,
       // debounce: 100,
