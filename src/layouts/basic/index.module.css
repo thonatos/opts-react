@@ -1,0 +1,36 @@
+.layout {
+  min-height: 100%;
+}
+
+.side {
+  box-shadow: 2px 0 6px rgba(0, 21, 41, 0.35);
+}
+
+.trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 16px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.trigger:hover {
+  color: #108ee9;
+}
+
+.logo {
+  height: 80px;
+  padding: 0.5em 0;
+  background: #002140;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo img {
+  display: block;
+  max-height: 100%;
+  margin: 0 auto;
+  background: #002140;
+}
