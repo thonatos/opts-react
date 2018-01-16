@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { observer, inject } from 'mobx-react'
 import { Layout, Icon } from 'antd'
 import { Helmet } from 'react-helmet'
+import { withRouter } from 'react-router'
 
 import { SideMenu } from '~/components/'
 import styles from './index.module.css'
@@ -11,6 +12,7 @@ const { Header, Sider, Content } = Layout
 
 @inject('app')
 @observer
+@withRouter
 class Basic extends Component {
   state = {
     collapsed: false,
@@ -21,8 +23,9 @@ class Basic extends Component {
     })
   }
   render() {
-    const { children, title, app } = this.props
-    const { menu, current_path } = app
+    const { children, title, app, match } = this.props
+    const { menu } = app
+    const { path: current_path } = match
 
     return (
       <Layout className={styles.layout}>
