@@ -6,13 +6,11 @@ import { observer, inject } from 'mobx-react'
 @observer
 class Protected extends Component {
   render() {
-    const { component: Component, auth, app, path, ...rest } = this.props
+    const { component: Component, auth, ...rest } = this.props
 
     if (!auth.authed) {
       return <Redirect to="/" />
     }
-
-    app.updateCurrentPath(path)
 
     return <Route {...rest} render={props => <Component {...props} />} />
   }

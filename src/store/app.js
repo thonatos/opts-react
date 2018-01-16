@@ -11,7 +11,6 @@ class State {
   locale = 'en_us'
 
   @observable menu = menu
-  @observable current_path = ''
 
   constructor(root) {
     this.root = root
@@ -30,11 +29,6 @@ class State {
   @action
   changeLanguageTo = lang => {
     this.locale = lang
-  }
-
-  @action
-  updateCurrentPath = (current = '') => {
-    this.current_path = current
   }
 }
 
