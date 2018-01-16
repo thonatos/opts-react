@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom'
 import { Menu, Icon } from 'antd'
 
 class SideMenu extends Component {
-  state = {}
-
   render() {
     const { menu, current_path } = this.props
     return (
