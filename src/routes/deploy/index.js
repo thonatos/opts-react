@@ -39,7 +39,7 @@ class Home extends Component {
 
   render() {
     return (
-      <Layout title="deploy">
+      <Layout title="Deploy">
         <Row gutter={12}>
           <Col span={12}>
             <CodeEditor

@@ -17,10 +17,8 @@ class State {
     }, 1000)
   }
 
-  @action
   load = async (url, method, data = {}) => {
     const token = this.root.auth.token
-    console.log('xxx', token)
     return axios({
       method,
       url,

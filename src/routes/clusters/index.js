@@ -12,7 +12,7 @@ class Clusters extends Component {
     const { langs } = this.props.app
 
     return (
-      <Layout title="Images">
+      <Layout title="Clusters">
         <ClusterTable
           {...{
             title: 'docker_cluster',
