@@ -19,18 +19,24 @@
 }
 
 .logo {
-  height: 80px;
-  padding: 0.5em 0;
+  height: 64px;
+  padding: 20px 0;
   background: #002140;
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  color: #61dafb;
+  text-align: center;
 }
 
 .logo img {
-  display: block;
-  max-height: 100%;
-  margin: 0 auto;
-  background: #002140;
+  height: 24px;
+  display: inline-block;
+  vertical-align: top;
+  margin-left: -16px;
+}
+
+.logo span {
+  color: inherit;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 24px;
 }

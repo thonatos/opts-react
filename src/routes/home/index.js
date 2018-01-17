@@ -27,6 +27,10 @@ class Home extends Component {
         <div className={styles.login}>
           <div className={styles.brand}>
             <img src={logo} alt="logo" />
+            <span>Opts Admin</span>
+            <div className={styles.brand_desc}>
+              <p>DevOps Middleware Based On Docker </p>
+            </div>
           </div>
           <LoginForm login={this.login} />
         </div>
