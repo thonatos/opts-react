@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { observer, inject } from 'mobx-react'
-import { Layout, Icon } from 'antd'
+import { Layout, Icon, Row, Col } from 'antd'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router'
 
-import { SideMenu } from '~/components/'
+import { SideMenu, UserInfo } from '~/components/'
 import styles from './index.module.css'
 import logo from '~/assets/logo.svg'
 
@@ -30,8 +30,9 @@ class Basic extends Component {
   }
 
   render() {
-    const { children, title, app, match } = this.props
+    const { children, title, app, match, auth } = this.props
     const { menu } = app
+    const { username, userrole } = auth
     const { path: current_path } = match
     const logout = this.logout
 
@@ -60,11 +61,18 @@ class Basic extends Component {
         {/* layout */}
         <Layout>
           <Header style={{ background: '#fff', padding: 0 }}>
-            <Icon
-              className={styles.trigger}
-              type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-              onClick={this.toggle}
-            />
+            <Row type="flex" justify="space-between" align="middle">
+              <Col>
+                <Icon
+                  className={styles.trigger}
+                  type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                  onClick={this.toggle}
+                />
+              </Col>
+              <Col>
+                <UserInfo {...{ username, userrole }} />
+              </Col>
+            </Row>
           </Header>
           <Content
             style={{
