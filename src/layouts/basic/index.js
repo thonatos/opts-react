@@ -10,22 +10,30 @@ import logo from '~/assets/logo.svg'
 
 const { Header, Sider, Content } = Layout
 
-@inject('app')
+@inject('app', 'auth')
 @observer
 @withRouter
 class Basic extends Component {
   state = {
     collapsed: false,
   }
+
   toggle = () => {
     this.setState({
       collapsed: !this.state.collapsed,
     })
   }
+
+  logout = () => {
+    const { auth } = this.props
+    auth.logout()
+  }
+
   render() {
     const { children, title, app, match } = this.props
     const { menu } = app
     const { path: current_path } = match
+    const logout = this.logout
 
     return (
       <Layout className={styles.layout}>
@@ -46,7 +54,7 @@ class Basic extends Component {
           <div className={styles.logo}>
             <img src={logo} alt="" />
           </div>
-          <SideMenu {...{ current_path, menu }} />
+          <SideMenu {...{ current_path, menu, logout }} />
         </Sider>
 
         {/* layout */}
