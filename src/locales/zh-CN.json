@@ -27,7 +27,9 @@
   "image_region": "可用区",
   "image_repo_full_name": "仓库全名",
   "image_created_at": "创建时间",
+  "deploy": "部署",
   "deploy_app": "应用名称",
   "deploy_cluster": "集群ID",
+  "deploy_actions": "操作",
   "deploy_created_at": "创建时间"
 }

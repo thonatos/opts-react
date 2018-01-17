@@ -27,7 +27,9 @@
   "image_region": "Region",
   "image_repo_full_name": "Repo Fullname",
   "image_created_at": "Created At",
+  "deploy": "Deploy",
   "deploy_app": "App",
   "deploy_cluster": "Cluster ID",
+  "deploy_actions": "Actions",
   "deploy_created_at": "Created At"
 }
