@@ -55,10 +55,10 @@ class State {
   }
 
   @action
-  loadApps = async name => {
+  loadApps = async id => {
     try {
-      const { data } = await axios.get(`/api/docker/clusters/${name}`)
-      this._apps.set(name, data)
+      const { data } = await this.load(`/api/docker/clusters/${id}`, 'get')
+      this._apps.set(id, data)
     } catch (error) {
     } finally {
     }

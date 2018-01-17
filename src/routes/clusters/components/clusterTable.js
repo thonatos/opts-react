@@ -39,11 +39,11 @@ class ClusterTable extends Component {
         dataIndex: 'actions',
         key: 'actions',
         render: (text, record) => {
-          const { name } = record
+          const { id } = record
           return (
             <div>
               <Button>
-                <Link to={`/clusters/${name}`}>{langs['cluster_apps']}</Link>
+                <Link to={`/clusters/${id}`}>{langs['cluster_apps']}</Link>
               </Button>
             </div>
           )
