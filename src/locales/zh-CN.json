@@ -26,5 +26,8 @@
   "image_namespace": "命名空间",
   "image_region": "可用区",
   "image_repo_full_name": "仓库全名",
-  "image_created_at": "创建时间"
+  "image_created_at": "创建时间",
+  "deploy_app": "应用名称",
+  "deploy_cluster": "集群ID",
+  "deploy_created_at": "创建时间"
 }
