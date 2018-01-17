@@ -3,18 +3,21 @@ import { axios } from '~/utils/'
 
 class State {
   @observable _clusters = []
+  @observable clusters_count = 0
+  @observable clusters_current = 1
+  @observable clusters_size = 5
   @observable clusters_loading = false
-  @observable _apps = new Map()
 
   @observable _images = new Map()
+  @observable images_count = 0
+  @observable images_current = 1
+  @observable images_size = 5
   @observable images_loading = false
+
+  @observable _apps = new Map()
 
   constructor(root) {
     this.root = root
-    setTimeout(() => {
-      this.loadImages()
-      this.loadClusters()
-    }, 1000)
   }
 
   load = async (url, method, data = {}) => {
@@ -31,11 +34,14 @@ class State {
   }
 
   @action
-  loadClusters = async () => {
+  loadClusters = async (offset = 1, limit = 100) => {
     this.clusters_loading = true
     try {
       const { data } = await this.load('/api/docker/clusters', 'get')
-      this._clusters = data
+      const { count, rows } = data
+      this._clusters = rows
+      this.clusters_count = count
+      this.clusters_current = offset
     } catch (error) {
     } finally {
       this.clusters_loading = false
@@ -70,14 +76,18 @@ class State {
   }
 
   @action
-  loadImages = async () => {
+  loadImages = async (offset = 1, limit = 100) => {
     this.images_loading = true
     try {
       const { data } = await this.load(
-        '/api/docker/images?limit=100&offset=0',
+        `/api/docker/images?limit=${limit}&offset=${offset}`,
         'get'
       )
-      this._images = data
+
+      const { count, rows } = data
+      this._images = rows
+      this.images_count = count
+      this.images_current = offset
     } catch (error) {
     } finally {
       this.images_loading = false

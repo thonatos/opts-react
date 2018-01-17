@@ -7,9 +7,27 @@ import { ImageTable } from './components/'
 @inject('app', 'docker')
 @observer
 class Images extends Component {
+  componentDidMount() {
+    const { docker } = this.props
+    docker.loadImages()
+  }
+
+  load = (current, pageSize) => {
+    const { docker } = this.props
+    docker.loadImages(current, pageSize)
+  }
+
   render() {
-    const { images, images_loading } = this.props.docker
-    const { langs } = this.props.app
+    const { app, docker } = this.props
+    const {
+      images,
+      images_loading,
+      images_count,
+      images_current,
+      images_size,
+    } = docker
+    const { langs } = app
+
     return (
       <Layout title="Images">
         <ImageTable
@@ -17,6 +35,12 @@ class Images extends Component {
             title: 'docker_image',
             data: images,
             loading: images_loading,
+            pagination: {
+              pageSize: images_size,
+              total: images_count,
+              current: images_current,
+            },
+            load: this.load,
             langs,
           }}
         />

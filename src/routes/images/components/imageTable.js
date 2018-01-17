@@ -27,8 +27,14 @@ const expandedRowRender = ({ tags }) => {
 }
 
 class ImageTable extends Component {
+  onChange = (pagination, filters, sorter) => {
+    const { current, pageSize } = pagination
+    const { load } = this.props
+    load(current, pageSize)
+  }
+
   render() {
-    const { title, data, loading, langs } = this.props
+    const { title, data, loading, pagination, langs } = this.props
 
     const columns = [
       {
@@ -68,7 +74,8 @@ class ImageTable extends Component {
           title={title ? () => <p>{langs[title]}</p> : null}
           style={{ marginBottom: '1em' }}
           scroll={{ x: 1200 }}
-          pagination={false}
+          pagination={pagination}
+          onChange={this.onChange}
           loading={loading}
           rowKey="id"
           expandedRowRender={expandedRowRender}
