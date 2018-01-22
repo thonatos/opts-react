@@ -42,10 +42,25 @@ class DeployTable extends Component {
     })
   }
 
-  hideModal = () => {
-    this.setState({
-      visible: false,
+  handleCancel = () => {
+    this.setState({ visible: false })
+  }
+
+  handleCreate = () => {
+    const form = this.form
+    form.validateFields((err, values) => {
+      if (err) {
+        return
+      }
+
+      console.log('Received values of form: ', values)
+      form.resetFields()
+      this.setState({ visible: false })
     })
+  }
+
+  saveFormRef = form => {
+    this.form = form
   }
 
   render() {
@@ -84,23 +99,15 @@ class DeployTable extends Component {
 
     return (
       <div>
-        <Modal
+        <DeployForm
           title={langs['deploy']}
-          width={960}
+          langs={langs}
+          data={this.state.deploy}
           visible={this.state.visible}
-          onCancel={this.hideModal}
-          bodyStyle={{
-            padding: 0,
-          }}
-        >
-          <DeployForm
-            {...{
-              title: null,
-              data: this.state.deploy,
-              langs,
-            }}
-          />
-        </Modal>
+          onCancel={this.handleCancel}
+          onCreate={this.handleCreate}
+          ref={this.saveFormRef}
+        />
         <Table
           title={() => {
             return <p>{langs[title]}</p>
