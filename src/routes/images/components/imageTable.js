@@ -15,9 +15,9 @@ const expandedRowRender = ({ tags }) => {
           const pushed = moment(pushed_at).format('MM/DD/YYYY HH:mm:ss')
           return (
             <li key={id} style={{ marginTop: '0.4em' }}>
-              <p>
+              <div>
                 <Tag color={ramdomColor}>{tag}</Tag> {digest} - {pushed}
-              </p>
+              </div>
             </li>
           )
         })}
