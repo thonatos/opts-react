@@ -25,6 +25,7 @@ class Deploys extends Component {
       deploys_count,
       deploys_current,
       deploys_size,
+      images,
     } = docker
     const { langs } = app
 
@@ -33,7 +34,8 @@ class Deploys extends Component {
         <DeployTable
           {...{
             title: 'docker_deploys',
-            data: deploys,
+            deploys,
+            images,
             loading: deploys_loading,
             pagination: {
               pageSize: deploys_size,
