@@ -64,7 +64,7 @@ class DeployTable extends Component {
   }
 
   render() {
-    const { title, data, loading, langs, pagination } = this.props
+    const { title, deploys, images, loading, langs, pagination } = this.props
     const columns = [
       {
         title: langs['deploy_app'],
@@ -102,7 +102,8 @@ class DeployTable extends Component {
         <DeployForm
           title={langs['deploy']}
           langs={langs}
-          data={this.state.deploy}
+          deploy={this.state.deploy}
+          images={images}
           visible={this.state.visible}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
@@ -119,7 +120,7 @@ class DeployTable extends Component {
           loading={loading}
           rowKey="id"
           expandedRowRender={expandedRowRender}
-          dataSource={data}
+          dataSource={deploys}
           columns={columns}
         />
       </div>
