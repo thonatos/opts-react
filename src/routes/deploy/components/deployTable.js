@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table, Button, Modal } from 'antd'
+import { Table, Button } from 'antd'
 import moment from 'moment'
 
 import { DeployForm } from './'
