@@ -1,6 +1,7 @@
-import { observable, computed, action, autorun } from 'mobx'
+import { observable, action, autorun } from 'mobx'
 import { persist } from 'mobx-persist'
 import { axios } from '~/utils/'
+import { Base64 } from 'js-base64'
 
 class State {
   @persist
@@ -15,14 +16,20 @@ class State {
   @observable
   userrole = ''
 
+  @observable authed = false
+
   constructor(root) {
     this.root = root
-    autorun(() => {})
+    autorun(() => {
+      // detect auth status
+      this.authed = this.isAuthed()
+    })
   }
 
-  @computed
-  get authed() {
-    return this.token ? true : false
+  isAuthed = () => {
+    if (!this.token) return false
+    const { exp } = JSON.parse(Base64.decode(this.token.split('.')[1] || '{}'))
+    return exp - Date.now() / 1000 > 0
   }
 
   @action
