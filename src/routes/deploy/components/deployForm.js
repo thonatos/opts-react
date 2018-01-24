@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Modal, Form, Icon, Input, Button, Select, Row, Col } from 'antd'
-import mobx from 'mobx'
+import * as mobx from 'mobx'
 import { CodeEditor } from '~/components/'
 import styles from './index.module.css'
 
@@ -50,12 +50,18 @@ class Editor extends Component {
   render() {
     const { value } = this.props
     return (
-      <CodeEditor
-        ref="editor"
-        value={value}
-        options={CodeEditorOptions}
-        onChange={this.handleEditorChange}
-      />
+      <div
+        style={{
+          lineHeight: '2',
+        }}
+      >
+        <CodeEditor
+          ref="editor"
+          value={value}
+          options={CodeEditorOptions}
+          onChange={this.handleEditorChange}
+        />
+      </div>
     )
   }
 }
