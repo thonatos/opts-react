@@ -1,20 +1,78 @@
 import React, { Component } from 'react'
 import { observer, inject } from 'mobx-react'
+import { Row, Col, Button } from 'antd'
 import { Basic as Layout } from '~/layouts/'
 
-import { ClusterTable } from './components/'
+import { ClusterTable, ClusterForm } from './components/'
 
 @inject('docker', 'app')
 @observer
 class Clusters extends Component {
+  state = {
+    visible: false,
+  }
+
   componentDidMount() {
-    const { docker } = this.props
-    docker.loadClusters()
+    this.load()
   }
 
   load = (current, pageSize) => {
     const { docker } = this.props
     docker.loadClusters(current, pageSize)
+  }
+
+  create = values => {
+    const { docker } = this.props
+    return docker.createCluster(values)
+  }
+
+  destory = id => {
+    const { docker } = this.props
+    return docker.deleteCluster(id)
+  }
+
+  showModal = () => {
+    this.setState({
+      visible: true,
+    })
+  }
+
+  handleCancel = () => {
+    this.setState({ visible: false })
+  }
+
+  handleCreate = () => {
+    const form = this.form
+    form.validateFields((err, values) => {
+      if (err) {
+        return
+      }
+      this.create(values)
+        .then(res => {
+          console.log('#res', res)
+          form.resetFields()
+          this.setState({ visible: false })
+          this.load()
+        })
+        .catch(err => {
+          console.log('#err', err)
+        })
+    })
+  }
+
+  handleDelete = id => {
+    this.destory(id)
+      .then(res => {
+        console.log('#res', res)
+        this.load()
+      })
+      .catch(err => {
+        console.log('#err', err)
+      })
+  }
+
+  saveFormRef = form => {
+    this.form = form
   }
 
   render() {
@@ -32,7 +90,25 @@ class Clusters extends Component {
       <Layout title="Clusters">
         <ClusterTable
           {...{
-            title: 'docker_cluster',
+            title: () => {
+              return (
+                <Row gutter={16}>
+                  <Col span={12}>
+                    <p>Docker Cluster</p>
+                  </Col>
+                  <Col
+                    span={12}
+                    style={{
+                      textAlign: 'right',
+                    }}
+                  >
+                    <Button type="primary" onClick={this.showModal}>
+                      Add Cluster
+                    </Button>
+                  </Col>
+                </Row>
+              )
+            },
             data: clusters,
             loading: clusters_loading,
             pagination: {
@@ -41,8 +117,18 @@ class Clusters extends Component {
               current: clusters_current,
             },
             load: this.load,
+            destroy: this.handleDelete,
             langs,
           }}
+        />
+
+        <ClusterForm
+          title="Add Docker Cluster"
+          langs={langs}
+          visible={this.state.visible}
+          onCancel={this.handleCancel}
+          onCreate={this.handleCreate}
+          ref={this.saveFormRef}
         />
       </Layout>
     )

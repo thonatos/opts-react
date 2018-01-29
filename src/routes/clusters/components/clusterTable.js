@@ -11,7 +11,7 @@ class ClusterTable extends Component {
   }
 
   render() {
-    const { title, data, loading, langs, pagination } = this.props
+    const { title, data, loading, langs, pagination, destroy } = this.props
     const columns = [
       {
         title: langs['cluster_name'],
@@ -39,11 +39,23 @@ class ClusterTable extends Component {
         dataIndex: 'actions',
         key: 'actions',
         render: (text, record) => {
-          const { id } = record
+          const { _id: id } = record
           return (
             <div>
               <Button>
                 <Link to={`/clusters/${id}`}>{langs['cluster_apps']}</Link>
+              </Button>
+
+              <Button
+                type="danger"
+                style={{
+                  marginLeft: '1em',
+                }}
+                onClick={() => {
+                  destroy(id)
+                }}
+              >
+                Delete
               </Button>
             </div>
           )
@@ -53,15 +65,13 @@ class ClusterTable extends Component {
 
     return (
       <Table
-        title={() => {
-          return <p>{langs[title]}</p>
-        }}
+        title={title}
         style={{ marginBottom: '1em' }}
         scroll={{ x: 1200 }}
         pagination={pagination}
         onChange={this.onChange}
         loading={loading}
-        rowKey="id"
+        rowKey="_id"
         dataSource={data}
         columns={columns}
       />
