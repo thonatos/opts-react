@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table, Button } from 'antd'
+import { Table, Button, Switch } from 'antd'
 import moment from 'moment'
 
 const expandedRowRender = ({ template }) => {
@@ -38,8 +38,16 @@ class DeployTable extends Component {
       },
       {
         title: langs['deploy_cluster'],
-        dataIndex: 'cluster_id',
+        dataIndex: 'cluster',
         key: 'region',
+      },
+      {
+        title: langs['deploy_enabled'],
+        dataIndex: 'enabled',
+        key: 'enabled',
+        render: (text, record) => {
+          return <Switch checked={text} />
+        },
       },
       {
         title: langs['deploy_created_at'],

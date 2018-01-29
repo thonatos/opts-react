@@ -1,5 +1,15 @@
 import React, { Component } from 'react'
-import { Modal, Form, Icon, Input, Button, Select, Row, Col } from 'antd'
+import {
+  Modal,
+  Form,
+  Icon,
+  Input,
+  Button,
+  Select,
+  Switch,
+  Row,
+  Col,
+} from 'antd'
 import * as mobx from 'mobx'
 import { CodeEditor } from '~/components/'
 import styles from './index.module.css'
@@ -161,7 +171,7 @@ class Deploy extends Component {
                   })(
                     <Select placeholder="Please select a image">
                       {images.map((v, i) => {
-                        const { repo_full_name, id } = v
+                        const { repo_full_name, _id: id } = v
                         return (
                           <Option value={id} key={i}>
                             {repo_full_name}
@@ -215,8 +225,7 @@ class Deploy extends Component {
     } = this.props
 
     const { getFieldDecorator } = form
-    const { _id: id, template, env, image, cluster, app } = data || {}
-
+    const { _id: id, template, env, image, cluster, app, enabled } = data || {}
     const formItemsEnv = this.getFormItem('env', mobx.toJS(env))
     const formItemsImage = this.getFormItem('image', mobx.toJS(image))
 
@@ -245,7 +254,7 @@ class Deploy extends Component {
 
             <Col span={24}>
               <Row style={{ padding: '1em' }} gutter={16}>
-                <Col span={12}>
+                <Col span={10}>
                   <FormItem label="App Name">
                     {getFieldDecorator('app', {
                       initialValue: app,
@@ -254,7 +263,7 @@ class Deploy extends Component {
                   </FormItem>
                 </Col>
 
-                <Col span={12}>
+                <Col span={10}>
                   <FormItem label="Cluster">
                     {getFieldDecorator('cluster', {
                       initialValue: cluster,
@@ -271,6 +280,16 @@ class Deploy extends Component {
                         })}
                       </Select>
                     )}
+                  </FormItem>
+                </Col>
+
+                <Col span={4}>
+                  <FormItem label="Enabled">
+                    {getFieldDecorator('enabled', {
+                      valuePropName: 'checked',
+                      initialValue: enabled || false,
+                      rules: [{ required: true }],
+                    })(<Switch />)}
                   </FormItem>
                 </Col>
               </Row>

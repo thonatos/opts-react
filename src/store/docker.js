@@ -172,6 +172,7 @@ class State {
   createOrUpdateDeploy = async ({
     id,
     app,
+    enabled,
     cluster,
     template,
     env_array: envs,
@@ -182,6 +183,7 @@ class State {
       let method = 'post'
       let postData = {
         app,
+        enabled,
         cluster,
         template,
         envs,
