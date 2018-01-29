@@ -8,8 +8,7 @@ import { ImageTable } from './components/'
 @observer
 class Images extends Component {
   componentDidMount() {
-    const { docker } = this.props
-    docker.loadImages()
+    this.load()
   }
 
   load = (current, pageSize) => {
