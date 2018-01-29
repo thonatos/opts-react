@@ -50,11 +50,7 @@ class Editor extends Component {
   render() {
     const { value } = this.props
     return (
-      <div
-        style={{
-          lineHeight: '2',
-        }}
-      >
+      <div style={{ lineHeight: '2' }}>
         <CodeEditor
           ref="editor"
           value={value}
@@ -132,6 +128,7 @@ class Deploy extends Component {
 
     const formItem = keys.map((k, index) => {
       const { key, value, image_id } = initialValue[index] || {}
+
       return (
         <Col span={24} key={index}>
           <Row gutter={8}>
@@ -207,9 +204,19 @@ class Deploy extends Component {
   }
 
   render() {
-    const { form, deploy, title, visible, onCancel, onCreate } = this.props
+    const {
+      form,
+      data,
+      title,
+      visible,
+      onCancel,
+      onCreate,
+      clusters,
+    } = this.props
+
     const { getFieldDecorator } = form
-    const { template, env, image } = deploy || {}
+    const { _id: id, template, env, image, cluster, app } = data || {}
+
     const formItemsEnv = this.getFormItem('env', mobx.toJS(env))
     const formItemsImage = this.getFormItem('image', mobx.toJS(image))
 
@@ -223,12 +230,52 @@ class Deploy extends Component {
           onCancel()
         }}
         onOk={onCreate}
-        bodyStyle={{
-          padding: '0 0 1em 0',
-        }}
+        bodyStyle={{ padding: '0 0 1em 0' }}
       >
         <Form layout="vertical">
           <Row>
+            <Col span={24} style={{ display: 'none' }}>
+              <FormItem>
+                {getFieldDecorator('id', {
+                  initialValue: id,
+                  rules: [{ required: false }],
+                })(<Input />)}
+              </FormItem>
+            </Col>
+
+            <Col span={24}>
+              <Row style={{ padding: '1em' }} gutter={16}>
+                <Col span={12}>
+                  <FormItem label="App Name">
+                    {getFieldDecorator('app', {
+                      initialValue: app,
+                      rules: [{ required: false }],
+                    })(<Input />)}
+                  </FormItem>
+                </Col>
+
+                <Col span={12}>
+                  <FormItem label="Cluster">
+                    {getFieldDecorator('cluster', {
+                      initialValue: cluster,
+                      rules: [{ required: false }],
+                    })(
+                      <Select placeholder="Please select a cluster">
+                        {clusters.map((v, i) => {
+                          const { name, _id: id } = v
+                          return (
+                            <Option value={id} key={i}>
+                              {name}
+                            </Option>
+                          )
+                        })}
+                      </Select>
+                    )}
+                  </FormItem>
+                </Col>
+              </Row>
+            </Col>
+
             <Col span={24}>
               <FormItem>
                 {getFieldDecorator('template', {
@@ -239,11 +286,7 @@ class Deploy extends Component {
             </Col>
 
             <Col span={24}>
-              <Row
-                style={{
-                  padding: '0 1em',
-                }}
-              >
+              <Row style={{ padding: '0 1em' }}>
                 <Col span={12}>
                   {formItemsEnv}
                   <Col span={24}>
