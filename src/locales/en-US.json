@@ -30,6 +30,7 @@
   "deploy": "Deploy",
   "deploy_app": "App",
   "deploy_cluster": "Cluster ID",
+  "deploy_enabled": "Enabled",
   "deploy_actions": "Actions",
   "deploy_created_at": "Created At"
 }

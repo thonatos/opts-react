@@ -30,6 +30,7 @@
   "deploy": "部署",
   "deploy_app": "应用名称",
   "deploy_cluster": "集群ID",
+  "deploy_enabled": "启用",
   "deploy_actions": "操作",
   "deploy_created_at": "创建时间"
 }
