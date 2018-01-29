@@ -1,4 +1,4 @@
-import { observable, action, computed } from 'mobx'
+import { observable, action, computed, toJS } from 'mobx'
 import { axios } from '~/utils/'
 
 class State {
@@ -8,13 +8,13 @@ class State {
   @observable clusters_size = 5
   @observable clusters_loading = false
 
-  @observable _images = new Map()
+  @observable _images = []
   @observable images_count = 0
   @observable images_current = 1
   @observable images_size = 5
   @observable images_loading = false
 
-  @observable _deploys = new Map()
+  @observable _deploys = []
   @observable deploys_count = 0
   @observable deploys_current = 1
   @observable deploys_size = 5
@@ -26,7 +26,7 @@ class State {
     this.root = root
   }
 
-  load = async (url, method, data = {}) => {
+  request = async (url, method, data = {}) => {
     const token = this.root.auth.token
     return axios({
       method,
@@ -39,39 +39,62 @@ class State {
     })
   }
 
+  // clusters
+
+  @computed
+  get clusters() {
+    return toJS(this._clusters)
+  }
+
   @action
   loadClusters = async (offset = 1, limit = 100) => {
     this.clusters_loading = true
     try {
-      const { data } = await this.load(
+      const { data: res } = await this.request(
         `/api/docker/clusters?limit=${limit}&offset=${offset - 1}`,
         'get'
       )
-      const { count, rows } = data
-      this._clusters = rows
-      this.clusters_count = count
-      this.clusters_current = offset
+      const { data, meta } = res
+      this._clusters = data
+      this.clusters_count = meta.total
+      this.clusters_current = meta.offset
     } catch (error) {
     } finally {
       this.clusters_loading = false
     }
   }
 
-  @computed
-  get clusters() {
-    const _clusters = this._clusters
-    return _clusters.length > 0 ? _clusters.peek() : []
+  @action
+  createCluster = async values => {
+    try {
+      const { data } = await this.request(
+        '/api/docker/clusters',
+        'post',
+        values
+      )
+
+      return data
+    } catch (error) {
+      console.log(error)
+      throw new Error('create failed.')
+    }
   }
 
   @action
-  loadApps = async id => {
+  deleteCluster = async (id = '') => {
     try {
-      const { data } = await this.load(`/api/docker/clusters/${id}`, 'get')
-      this._apps.set(id, data)
+      const { data } = await this.request(
+        `/api/docker/clusters/${id}`,
+        'delete'
+      )
+      return data
     } catch (error) {
-    } finally {
+      console.log(error)
+      throw new Error('create failed.')
     }
   }
+
+  // apps
 
   @computed
   get apps() {
@@ -79,59 +102,117 @@ class State {
     const _apps = {}
     keys.forEach(k => {
       const apps = this._apps.get(k)
-      _apps[k] = apps.length > 0 ? apps.peek() : []
+      _apps[k] = toJS(apps)
     })
     return _apps
+  }
+
+  @action
+  loadApps = async id => {
+    try {
+      const { data } = await this.request(`/api/docker/clusters/${id}`, 'get')
+      this._apps.set(id, data)
+    } catch (error) {
+    } finally {
+    }
+  }
+
+  // images
+
+  @computed
+  get images() {
+    return toJS(this._images)
   }
 
   @action
   loadImages = async (offset = 1, limit = 100) => {
     this.images_loading = true
     try {
-      const { data } = await this.load(
+      const { data: res } = await this.request(
         `/api/docker/images?limit=${limit}&offset=${offset - 1}`,
         'get'
       )
 
-      const { count, rows } = data
-      this._images = rows
-      this.images_count = count
-      this.images_current = offset
+      const { data, meta } = res
+      this._images = data
+      this.images_count = meta.total
+      this.images_current = meta.offset
     } catch (error) {
     } finally {
       this.images_loading = false
     }
   }
 
+  // deploys
   @computed
-  get images() {
-    const _images = this._images
-    return _images.length > 0 ? _images.peek() : []
+  get deploys() {
+    return toJS(this._deploys)
   }
 
   @action
   loadDeploys = async (offset = 1, limit = 100) => {
     this.deploys_loading = true
     try {
-      const { data } = await this.load(
+      const { data: res } = await this.request(
         `/api/docker/deploys?limit=${limit}&offset=${offset - 1}`,
         'get'
       )
 
-      const { count, rows } = data
-      this._deploys = rows
-      this.deploys_count = count
-      this.deploys_current = offset
+      const { data, meta } = res
+      this._deploys = data
+      this.deploys_count = meta.total
+      this.deploys_current = meta.offset
     } catch (error) {
     } finally {
       this.deploys_loading = false
     }
   }
 
-  @computed
-  get deploys() {
-    const _deploys = this._deploys
-    return _deploys.length > 0 ? _deploys.peek() : []
+  @action
+  createOrUpdateDeploy = async ({
+    id,
+    app,
+    cluster,
+    template,
+    env_array: envs,
+    image_array: images,
+  }) => {
+    try {
+      let url = '/api/docker/deploys'
+      let method = 'post'
+      let postData = {
+        app,
+        cluster,
+        template,
+        envs,
+        images,
+      }
+
+      if (id) {
+        url = url + `/${id}`
+        method = 'put'
+        postData = {
+          ...postData,
+          id,
+        }
+      }
+      const { data } = await this.request(url, method, postData)
+      return data
+    } catch (error) {
+      console.log(error)
+      throw new Error('create failed.')
+    }
+  }
+
+  @action
+  deleteDeploy = async (id = '') => {
+    try {
+      const { data } = await this.request(`/api/docker/deploys/${id}`, 'delete')
+      return data
+    } catch (error) {
+      console.log(error)
+      throw new Error('create failed.')
+    }
   }
 }
 
