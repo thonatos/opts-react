@@ -1,3 +1,4 @@
 import ClusterTable from './clusterTable'
+import ClusterForm from './clusterForm'
 
-export { ClusterTable }
+export { ClusterForm, ClusterTable }
