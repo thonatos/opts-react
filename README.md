@@ -1,3 +1,3 @@
 opts-react
 
-> WIP
+> Frontend For (Dev)Opts.
