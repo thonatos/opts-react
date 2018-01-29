@@ -3,6 +3,11 @@ import { persist } from 'mobx-persist'
 import { axios } from '~/utils/'
 import { Base64 } from 'js-base64'
 
+const isAuthed = token => {
+  if (!token) return false
+  const { exp } = JSON.parse(Base64.decode(token.split('.')[1] || '{}'))
+  return exp - Date.now() / 1000 > 0
+}
 class State {
   @persist
   @observable
@@ -21,15 +26,8 @@ class State {
   constructor(root) {
     this.root = root
     autorun(() => {
-      // detect auth status
-      this.authed = this.isAuthed()
+      this.authed = isAuthed(this.token)
     })
-  }
-
-  isAuthed = () => {
-    if (!this.token) return false
-    const { exp } = JSON.parse(Base64.decode(this.token.split('.')[1] || '{}'))
-    return exp - Date.now() / 1000 > 0
   }
 
   @action
