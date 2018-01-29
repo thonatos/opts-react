@@ -5,15 +5,21 @@ import 'codemirror/theme/mbo.css'
 import 'codemirror/mode/yaml/yaml'
 
 class Editor extends Component {
-  state = {
-    value: '',
+  constructor(props) {
+    super(props)
+    const value = this.props.value || ''
+    this.state = {
+      value,
+    }
   }
 
-  componentDidMount() {
-    const { value } = this.props
-    this.setState({
-      value,
-    })
+  componentWillReceiveProps(nextProps) {
+    if ('value' in nextProps) {
+      const value = nextProps.value
+      this.setState({
+        value,
+      })
+    }
   }
 
   render() {
