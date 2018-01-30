@@ -32,7 +32,7 @@ class AppTable extends Component {
   showServices = ({ services }) => {
     this.setState({
       visible: true,
-      services: services.length > 0 ? services.peek() : [],
+      services: services || [],
     })
   }
 
@@ -80,6 +80,7 @@ class AppTable extends Component {
         dataIndex: 'service',
         key: 'service',
         render: (text, record) => {
+          console.log(record)
           return (
             <Button onClick={this.showServices.bind(null, record)}>
               Service
