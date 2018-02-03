@@ -126,7 +126,7 @@ class Deploy extends Component {
     })
   }
 
-  getFormItem = (type, initialValue = []) => {
+  getFormItems = (type, initialValue = []) => {
     const { images, form } = this.props
     const { getFieldDecorator, getFieldValue } = form
 
@@ -213,6 +213,31 @@ class Deploy extends Component {
     return formItem
   }
 
+  getTriggerItem = initialValue => {
+    const { images, form } = this.props
+    const { getFieldDecorator } = form
+
+    return (
+      <FormItem label="Trigger">
+        {getFieldDecorator('trigger', {
+          initialValue: initialValue,
+          rules: [{ required: true }],
+        })(
+          <Select placeholder="Please select a trigger">
+            {images.map((v, i) => {
+              const { repo_full_name, _id: id } = v
+              return (
+                <Option value={id} key={i}>
+                  {repo_full_name}
+                </Option>
+              )
+            })}
+          </Select>
+        )}
+      </FormItem>
+    )
+  }
+
   render() {
     const {
       form,
@@ -225,9 +250,23 @@ class Deploy extends Component {
     } = this.props
 
     const { getFieldDecorator } = form
-    const { _id: id, template, envs, images, cluster, app, enabled } = data || {}
-    const formItemsEnv = this.getFormItem('env', mobx.toJS(envs))
-    const formItemsImage = this.getFormItem('image', mobx.toJS(images))
+    const {
+      _id: id,
+      app,
+      cluster,
+      enabled,
+      trigger,
+      template,
+      envs: envArray,
+      images: imageArray,
+    } =
+      data || {}
+
+    const images = mobx.toJS(imageArray) || []
+    const envs = mobx.toJS(envArray) || []
+    const formItemsEnv = this.getFormItems('env', envs)
+    const formItemsImage = this.getFormItems('image', images)
+    const formItemTrigger = this.getTriggerItem(trigger)
 
     return (
       <Modal
@@ -292,6 +331,8 @@ class Deploy extends Component {
                     })(<Switch />)}
                   </FormItem>
                 </Col>
+
+                <Col span={24}>{formItemTrigger}</Col>
               </Row>
             </Col>
 
