@@ -6,7 +6,7 @@
   "cluster_region": "Region",
   "cluster_created_at": "Created At",
   "cluster_action": "Actions",
-  "cluster_apps": "Cluster Apps",
+  "cluster_apps": "Apps",
   "app_name": "Name",
   "app_description": "Description",
   "app_desired_state": "Desired State",
