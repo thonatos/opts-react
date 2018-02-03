@@ -15,8 +15,9 @@ const expandedRowRender = ({ containers, definition }) => {
       <ul
         style={{
           listStyle: 'none',
-          paddingLeft: '0'
-        }}>
+          paddingLeft: '0',
+        }}
+      >
         {keys.map(k => {
           const { name, ip, health, status, vm_id, fail_count } = containers[k]
           const tags = {
