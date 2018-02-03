@@ -225,9 +225,9 @@ class Deploy extends Component {
     } = this.props
 
     const { getFieldDecorator } = form
-    const { _id: id, template, env, image, cluster, app, enabled } = data || {}
-    const formItemsEnv = this.getFormItem('env', mobx.toJS(env))
-    const formItemsImage = this.getFormItem('image', mobx.toJS(image))
+    const { _id: id, template, envs, images, cluster, app, enabled } = data || {}
+    const formItemsEnv = this.getFormItem('env', mobx.toJS(envs))
+    const formItemsImage = this.getFormItem('image', mobx.toJS(images))
 
     return (
       <Modal
