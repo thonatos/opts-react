@@ -47,7 +47,18 @@ class State {
   }
 
   @action
+  preload = async () => {
+    await this.loadImages()
+    await this.loadClusters()
+    await this.loadDeploys()
+  }
+
+  @action
   loadClusters = async (offset = 1, limit = 100) => {
+    if (this.clusters_loading) {
+      return
+    }
+
     this.clusters_loading = true
     try {
       const { data: res } = await this.request(
@@ -126,6 +137,10 @@ class State {
 
   @action
   loadImages = async (offset = 1, limit = 100) => {
+    if (this.images_loading) {
+      return
+    }
+
     this.images_loading = true
     try {
       const { data: res } = await this.request(
@@ -151,6 +166,10 @@ class State {
 
   @action
   loadDeploys = async (offset = 1, limit = 100) => {
+    if (this.deploys_loading) {
+      return
+    }
+
     this.deploys_loading = true
     try {
       const { data: res } = await this.request(
@@ -172,8 +191,9 @@ class State {
   createOrUpdateDeploy = async ({
     id,
     app,
-    enabled,
     cluster,
+    trigger,
+    enabled,
     template,
     env_array: envs,
     image_array: images,
@@ -183,8 +203,9 @@ class State {
       let method = 'post'
       let postData = {
         app,
-        enabled,
         cluster,
+        trigger,
+        enabled,
         template,
         envs,
         images,
