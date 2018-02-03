@@ -112,7 +112,7 @@ class Deploys extends Component {
               return (
                 <Row gutter={16}>
                   <Col span={12}>
-                    <p>Docker Cluster</p>
+                    <p>Docker Deploys</p>
                   </Col>
                   <Col
                     span={12}
