@@ -27,9 +27,6 @@ class State {
     this.root = root
     autorun(async () => {
       this.authed = isAuthed(this.token)
-      if (this.authed) {
-        await this.root.docker.preload()
-      }
     })
   }
 
