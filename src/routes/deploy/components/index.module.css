@@ -1,7 +1,7 @@
 .dynamic_delete_button {
   cursor: pointer;
   position: relative;
-  top: 8px;
+  top: 4px;
   font-size: 24px;
   color: #999;
   transition: all 0.3s;
