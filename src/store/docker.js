@@ -20,6 +20,9 @@ class State {
   @observable deploys_size = 5
   @observable deploys_loading = false
 
+  @observable _images_search = []
+  @observable _clusters_search = []
+
   @observable _apps = new Map()
 
   constructor(root) {
@@ -39,6 +42,36 @@ class State {
     })
   }
 
+  requestWithPagination = async (offset = 1, limit = 100, options = {}) => {
+    const { store, url } = options
+    if (!store) {
+      return
+    }
+    const storage = `_${store}`
+    const loading = `${store}_loading`
+    const current = `${store}_current`
+    const count = `${store}_count`
+
+    if (this[loading]) {
+      return
+    }
+
+    this[loading] = true
+    try {
+      const { data: res } = await this.request(
+        `${url}?limit=${limit}&offset=${offset - 1}`,
+        'get'
+      )
+      const { data, meta } = res
+      this[storage] = data
+      this[count] = meta.total
+      this[current] = meta.offset
+    } catch (error) {
+    } finally {
+      this[loading] = false
+    }
+  }
+
   // clusters
 
   @computed
@@ -46,33 +79,24 @@ class State {
     return toJS(this._clusters)
   }
 
-  @action
-  preload = async () => {
-    await this.loadImages()
-    await this.loadClusters()
-    await this.loadDeploys()
+  @computed
+  get clustersSearch() {
+    return toJS(this._clusters_search)
   }
 
   @action
-  loadClusters = async (offset = 1, limit = 100) => {
-    if (this.clusters_loading) {
-      return
+  loadClusters = async (...args) => {
+    const opt = {
+      store: 'clusters',
+      url: '/api/docker/clusters',
     }
+    return this.requestWithPagination(...args, opt)
+  }
 
-    this.clusters_loading = true
-    try {
-      const { data: res } = await this.request(
-        `/api/docker/clusters?limit=${limit}&offset=${offset - 1}`,
-        'get'
-      )
-      const { data, meta } = res
-      this._clusters = data
-      this.clusters_count = meta.total
-      this.clusters_current = meta.offset
-    } catch (error) {
-    } finally {
-      this.clusters_loading = false
-    }
+  @action
+  searchClusters = async (name = '') => {
+    const { data } = await this.request(`/api/docker/clusters?s=${name}`, 'get')
+    this._clusters_search = data.data || []
   }
 
   @action
@@ -135,27 +159,24 @@ class State {
     return toJS(this._images)
   }
 
+  @computed
+  get imagesSearch() {
+    return toJS(this._images_search)
+  }
+
   @action
-  loadImages = async (offset = 1, limit = 100) => {
-    if (this.images_loading) {
-      return
+  loadImages = async (...args) => {
+    const opt = {
+      store: 'images',
+      url: '/api/docker/images',
     }
+    return this.requestWithPagination(...args, opt)
+  }
 
-    this.images_loading = true
-    try {
-      const { data: res } = await this.request(
-        `/api/docker/images?limit=${limit}&offset=${offset - 1}`,
-        'get'
-      )
-
-      const { data, meta } = res
-      this._images = data
-      this.images_count = meta.total
-      this.images_current = meta.offset
-    } catch (error) {
-    } finally {
-      this.images_loading = false
-    }
+  @action
+  searchImages = async (name = '') => {
+    const { data } = await this.request(`/api/docker/images?s=${name}`, 'get')
+    this._images_search = data.data || []
   }
 
   // deploys
@@ -165,26 +186,12 @@ class State {
   }
 
   @action
-  loadDeploys = async (offset = 1, limit = 100) => {
-    if (this.deploys_loading) {
-      return
+  loadDeploys = async (...args) => {
+    const opt = {
+      store: 'deploys',
+      url: '/api/docker/deploys',
     }
-
-    this.deploys_loading = true
-    try {
-      const { data: res } = await this.request(
-        `/api/docker/deploys?limit=${limit}&offset=${offset - 1}`,
-        'get'
-      )
-
-      const { data, meta } = res
-      this._deploys = data
-      this.deploys_count = meta.total
-      this.deploys_current = meta.offset
-    } catch (error) {
-    } finally {
-      this.deploys_loading = false
-    }
+    return this.requestWithPagination(...args, opt)
   }
 
   @action
