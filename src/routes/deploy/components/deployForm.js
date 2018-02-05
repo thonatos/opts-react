@@ -11,6 +11,7 @@ import {
   Col,
 } from 'antd'
 import * as mobx from 'mobx'
+import debounce from 'lodash.debounce'
 import { CodeEditor } from '~/components/'
 import styles from './index.module.css'
 
@@ -23,57 +24,13 @@ const CodeEditorOptions = {
   lineNumbers: true,
 }
 
-class Editor extends Component {
-  constructor(props) {
-    super(props)
-    const value = this.props.value || ''
-    this.state = {
-      value,
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if ('value' in nextProps) {
-      const value = nextProps.value
-      this.setState({
-        value,
-      })
-    }
-  }
-
-  handleEditorChange = (editor, data, value) => {
-    if (!('value' in this.props)) {
-      this.setState({
-        value,
-      })
-    }
-    this.triggerChange(value)
-  }
-
-  triggerChange = changedValue => {
-    const onChange = this.props.onChange
-    if (onChange) {
-      onChange(changedValue)
-    }
-  }
-
-  render() {
-    const { value } = this.props
-    return (
-      <div style={{ lineHeight: '2' }}>
-        <CodeEditor
-          ref="editor"
-          value={value}
-          options={CodeEditorOptions}
-          onChange={this.handleEditorChange}
-        />
-      </div>
-    )
-  }
-}
-
 @Form.create()
 class Deploy extends Component {
+  constructor(props) {
+    super(props)
+    this.onSearch = debounce(this.onSearch, 800)
+  }
+
   state = {
     uuids: {
       env: 0,
@@ -95,12 +52,9 @@ class Deploy extends Component {
   remove = (k, type) => {
     const { form } = this.props
     const keys = form.getFieldValue(type)
-    // We need at least one passenger
     if (keys.length === 0) {
       return
     }
-
-    // can use data-binding to set
     form.setFieldsValue({
       [type]: keys.filter(key => key !== k),
     })
@@ -109,9 +63,7 @@ class Deploy extends Component {
   add = type => {
     const { form } = this.props
     const uuids = this.state.uuids
-    // can use data-binding to get
     const keys = form.getFieldValue(type)
-
     const uuid = uuids[type] || keys.length
     const nextKeys = keys.concat(uuid)
     this.setState({
@@ -119,11 +71,14 @@ class Deploy extends Component {
         [type]: uuid + 1,
       }),
     })
-    // can use data-binding to set
-    // important! notify form to detect changes
     form.setFieldsValue({
       [type]: nextKeys,
     })
+  }
+
+  onSearch = (...args) => {
+    const { onSearch: handleSearch } = this.props
+    handleSearch(...args)
   }
 
   getFormItems = (type, initialValue = []) => {
@@ -142,7 +97,7 @@ class Deploy extends Component {
       return (
         <Col span={24} key={index}>
           <Row gutter={8}>
-            <Col span={10}>
+            <Col span={8}>
               <FormItem>
                 {getFieldDecorator(`${type}_array[${k}].key`, {
                   initialValue: key,
@@ -157,7 +112,7 @@ class Deploy extends Component {
                 })(<Input placeholder="key" />)}
               </FormItem>
             </Col>
-            <Col span={10}>
+            <Col span={12}>
               {type === 'image' ? (
                 <FormItem>
                   {getFieldDecorator(`${type}_array[${k}].image_id`, {
@@ -169,7 +124,12 @@ class Deploy extends Component {
                       },
                     ],
                   })(
-                    <Select placeholder="Please select a image">
+                    <Select
+                      placeholder="Please select a image"
+                      showSearch={true}
+                      filterOption={false}
+                      onSearch={this.onSearch.bind(this, 'images')}
+                    >
                       {images.map((v, i) => {
                         const { repo_full_name, _id: id } = v
                         return (
@@ -216,19 +176,23 @@ class Deploy extends Component {
   getTriggerItem = initialValue => {
     const { images, form } = this.props
     const { getFieldDecorator } = form
-
     return (
       <FormItem label="Trigger">
         {getFieldDecorator('trigger', {
           initialValue: initialValue,
           rules: [{ required: true }],
         })(
-          <Select placeholder="Please select a trigger">
+          <Select
+            placeholder="Please select a trigger"
+            showSearch={true}
+            filterOption={false}
+            onSearch={this.onSearch.bind(this, 'images')}
+          >
             {images.map((v, i) => {
               const { repo_full_name, _id: id } = v
               return (
                 <Option value={id} key={i}>
-                  {repo_full_name}
+                  {repo_full_name} - {id}
                 </Option>
               )
             })}
@@ -308,7 +272,12 @@ class Deploy extends Component {
                       initialValue: cluster,
                       rules: [{ required: false }],
                     })(
-                      <Select placeholder="Please select a cluster">
+                      <Select
+                        placeholder="Please select a cluster"
+                        showSearch={true}
+                        filterOption={false}
+                        onSearch={this.onSearch.bind(this, 'clusters')}
+                      >
                         {clusters.map((v, i) => {
                           const { name, _id: id } = v
                           return (
@@ -341,7 +310,7 @@ class Deploy extends Component {
                 {getFieldDecorator('template', {
                   initialValue: template,
                   rules: [{ required: true, message: 'yaml can not be null' }],
-                })(<Editor />)}
+                })(<CodeEditor options={CodeEditorOptions} />)}
               </FormItem>
             </Col>
 

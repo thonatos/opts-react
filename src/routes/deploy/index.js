@@ -51,7 +51,7 @@ class Deploys extends Component {
     this.setState({ visible: false })
   }
 
-  handleCreate = () => {
+  handleCreate = async () => {
     const form = this.form
     form.validateFields((err, values) => {
       if (err) {
@@ -60,9 +60,10 @@ class Deploys extends Component {
       this.update(values)
         .then(res => {
           console.log('#res', res)
-          form.resetFields()
-          this.setState({ visible: false })
-          this.load()
+          this.setState({ visible: false, data: null }, () => {
+            form.resetFields()
+            this.load()
+          })
         })
         .catch(err => {
           console.log('#err', err)
@@ -81,13 +82,35 @@ class Deploys extends Component {
       })
   }
 
+  handleSearch = (type, value) => {
+    if (!value) {
+      return
+    }
+
+    const { docker } = this.props
+    const { searchClusters, searchImages } = docker
+
+    switch (type) {
+      case 'images':
+        searchImages(value)
+        break
+
+      case 'clusters':
+        searchClusters(value)
+        break
+
+      default:
+        break
+    }
+  }
+
   saveFormRef = form => {
     this.form = form
   }
 
   render() {
     const { app, docker } = this.props
-    const { images, clusters } = docker
+    const { imagesSearch, clustersSearch } = docker
     const { langs } = app
 
     const {
@@ -141,11 +164,12 @@ class Deploys extends Component {
           title={langs['deploy']}
           langs={langs}
           data={this.state.data}
-          images={images}
-          clusters={clusters}
+          images={imagesSearch}
+          clusters={clustersSearch}
           visible={this.state.visible}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
+          onSearch={this.handleSearch}
           ref={this.saveFormRef}
         />
       </Layout>
