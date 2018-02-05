@@ -22,19 +22,39 @@ class Editor extends Component {
     }
   }
 
+  handleChange = (editor, data, value) => {
+    if (!('value' in this.props)) {
+      this.setState({
+        value,
+      })
+    }
+    this.triggerChange(value)
+  }
+
+  triggerChange = changedValue => {
+    const onChange = this.props.onChange
+    if (onChange) {
+      onChange(changedValue)
+    }
+  }
+
   render() {
-    const { options, onChange } = this.props
+    const { options } = this.props
+
     return (
-      <CodeMirror
-        value={this.state.value}
-        options={options}
-        onBeforeChange={(editor, data, value) => {
-          this.setState({
-            value: value,
-          })
-        }}
-        onChange={onChange}
-      />
+      <div style={{ lineHeight: '2' }}>
+        <CodeMirror
+          ref="editor"
+          value={this.state.value}
+          options={options}
+          onBeforeChange={(editor, data, value) => {
+            this.setState({
+              value: value,
+            })
+          }}
+          onChange={this.handleChange}
+        />
+      </div>
     )
   }
 }
