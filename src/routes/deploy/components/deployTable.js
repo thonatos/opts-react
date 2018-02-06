@@ -40,6 +40,9 @@ class DeployTable extends Component {
         title: langs['deploy_cluster'],
         dataIndex: 'cluster',
         key: 'region',
+        render: text => {
+          return text.name || ''
+        },
       },
       {
         title: langs['deploy_enabled'],
