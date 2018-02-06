@@ -4,6 +4,53 @@ import { Row, Col, Button } from 'antd'
 import { Basic as Layout } from '~/layouts/'
 import { DeployTable, DeployForm } from './components/'
 
+const serialize = data => {
+  // rename & remove keys
+  data['images'] = data['image_array'] || []
+  data['envs'] = data['env_array'] || []
+  for (const name of ['env', 'image', 'env_array', 'image_array']) {
+    data[name] && delete data[name]
+  }
+
+  // format
+  const formatImageArray = data => {
+    const prefix = 'images'
+    const arr = data[prefix] || []
+    const newArray = arr.map(v => {
+      const [image_id, repo_full_name] = v.image.split('#')
+      delete v['image']
+      return {
+        ...v,
+        image_id,
+        repo_full_name,
+      }
+    })
+    data[prefix] = newArray
+  }
+
+  const formatTrigger = data => {
+    const prefix = 'trigger'
+    const [image_id, repo_full_name] = data[prefix].split('#')
+    data[prefix] = {
+      image_id,
+      repo_full_name,
+    }
+  }
+
+  const formatCluster = data => {
+    const prefix = 'cluster'
+    const [cluster_id, name] = data[prefix].split('#')
+    data[prefix] = {
+      name,
+      cluster_id,
+    }
+  }
+
+  formatTrigger(data)
+  formatCluster(data)
+  formatImageArray(data)
+}
+
 @inject('docker', 'app')
 @observer
 class Deploys extends Component {
@@ -57,6 +104,10 @@ class Deploys extends Component {
       if (err) {
         return
       }
+
+      serialize(values)
+      console.log(values)
+
       this.update(values)
         .then(res => {
           console.log('#res', res)
