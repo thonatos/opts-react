@@ -195,38 +195,15 @@ class State {
   }
 
   @action
-  createOrUpdateDeploy = async ({
-    id,
-    app,
-    cluster,
-    trigger,
-    enabled,
-    template,
-    env_array: envs,
-    image_array: images,
-  }) => {
+  createOrUpdateDeploy = async dep => {
     try {
       let url = '/api/docker/deploys'
       let method = 'post'
-      let postData = {
-        app,
-        cluster,
-        trigger,
-        enabled,
-        template,
-        envs,
-        images,
-      }
-
-      if (id) {
-        url = url + `/${id}`
+      if (dep.id) {
+        url = url + `/${dep.id}`
         method = 'put'
-        postData = {
-          ...postData,
-          id,
-        }
       }
-      const { data } = await this.request(url, method, postData)
+      const { data } = await this.request(url, method, dep)
       return data
     } catch (error) {
       console.log(error)
