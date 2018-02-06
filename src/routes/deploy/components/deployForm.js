@@ -14,6 +14,7 @@ import * as mobx from 'mobx'
 import debounce from 'lodash.debounce'
 import { CodeEditor } from '~/components/'
 import styles from './index.module.css'
+import uniqby from 'lodash.uniqby'
 
 const FormItem = Form.Item
 const Option = Select.Option
@@ -81,18 +82,28 @@ class Deploy extends Component {
     handleSearch(...args)
   }
 
-  getFormItems = (type, initialValue = []) => {
-    const { images, form } = this.props
+  getFormItems = (type, initialValues = []) => {
+    const { images: imageArray, form } = this.props
     const { getFieldDecorator, getFieldValue } = form
+    const initialArray = initialValues.map(v => {
+      const { image_id } = v
+      image_id && (v._id = v.image_id)
+      return v
+    })
+    let images = []
+    if (type === 'image') {
+      images = uniqby([...imageArray, ...initialArray], '_id')
+    }
 
     getFieldDecorator(type, {
-      initialValue: [...Array(initialValue.length).keys()],
+      initialValue: [...Array(initialArray.length).keys()],
     })
 
     const keys = getFieldValue(type)
 
     const formItem = keys.map((k, index) => {
-      const { key, value, image_id } = initialValue[index] || {}
+      const { key, value, _id, repo_full_name } = initialArray[index] || {}
+      const selected = (_id && `${_id}#${repo_full_name}`) || ''
 
       return (
         <Col span={24} key={index}>
@@ -115,8 +126,8 @@ class Deploy extends Component {
             <Col span={12}>
               {type === 'image' ? (
                 <FormItem>
-                  {getFieldDecorator(`${type}_array[${k}].image_id`, {
-                    initialValue: image_id,
+                  {getFieldDecorator(`${type}_array[${k}].image`, {
+                    initialValue: selected,
                     rules: [
                       {
                         required: true,
@@ -131,9 +142,10 @@ class Deploy extends Component {
                       onSearch={this.onSearch.bind(this, 'images')}
                     >
                       {images.map((v, i) => {
-                        const { repo_full_name, _id: id } = v
+                        const { repo_full_name, _id } = v
+                        const value = `${_id}#${repo_full_name}`
                         return (
-                          <Option value={id} key={i}>
+                          <Option value={value} key={i}>
                             {repo_full_name}
                           </Option>
                         )
@@ -173,13 +185,51 @@ class Deploy extends Component {
     return formItem
   }
 
-  getTriggerItem = initialValue => {
+  getClusterItem = (cluster = {}) => {
+    const { clusters, form } = this.props
+    const { getFieldDecorator } = form
+    const { cluster_id: _id, name } = cluster
+    _id && clusters.push({ _id, name })
+    const selects = uniqby(clusters, '_id')
+    const selected = `${_id}#${name}`
+
+    return (
+      <FormItem label="Cluster">
+        {getFieldDecorator('cluster', {
+          initialValue: selected,
+          rules: [{ required: false }],
+        })(
+          <Select
+            placeholder="Please select a cluster"
+            showSearch={true}
+            filterOption={false}
+            onSearch={this.onSearch.bind(this, 'clusters')}
+          >
+            {selects.map((v, i) => {
+              const { name, _id } = v
+              return (
+                <Option value={`${_id}#${name}`} key={i}>
+                  {name}
+                </Option>
+              )
+            })}
+          </Select>
+        )}
+      </FormItem>
+    )
+  }
+
+  getTriggerItem = (trigger = {}) => {
     const { images, form } = this.props
     const { getFieldDecorator } = form
+    const { image_id: _id, repo_full_name } = trigger
+    _id && images.push({ _id, repo_full_name })
+    const selects = uniqby(images, '_id')
+    const selected = `${_id}#${repo_full_name}`
     return (
       <FormItem label="Trigger">
         {getFieldDecorator('trigger', {
-          initialValue: initialValue,
+          initialValue: selected,
           rules: [{ required: true }],
         })(
           <Select
@@ -188,11 +238,11 @@ class Deploy extends Component {
             filterOption={false}
             onSearch={this.onSearch.bind(this, 'images')}
           >
-            {images.map((v, i) => {
-              const { repo_full_name, _id: id } = v
+            {selects.map((v, i) => {
+              const { repo_full_name, _id } = v
               return (
-                <Option value={id} key={i}>
-                  {repo_full_name} - {id}
+                <Option value={`${_id}#${repo_full_name}`} key={i}>
+                  {repo_full_name}
                 </Option>
               )
             })}
@@ -203,15 +253,7 @@ class Deploy extends Component {
   }
 
   render() {
-    const {
-      form,
-      data,
-      title,
-      visible,
-      onCancel,
-      onCreate,
-      clusters,
-    } = this.props
+    const { form, data, title, visible, onCancel, onCreate } = this.props
 
     const { getFieldDecorator } = form
     const {
@@ -231,6 +273,7 @@ class Deploy extends Component {
     const formItemsEnv = this.getFormItems('env', envs)
     const formItemsImage = this.getFormItems('image', images)
     const formItemTrigger = this.getTriggerItem(trigger)
+    const formItemCluster = this.getClusterItem(cluster)
 
     return (
       <Modal
@@ -266,30 +309,7 @@ class Deploy extends Component {
                   </FormItem>
                 </Col>
 
-                <Col span={10}>
-                  <FormItem label="Cluster">
-                    {getFieldDecorator('cluster', {
-                      initialValue: cluster,
-                      rules: [{ required: false }],
-                    })(
-                      <Select
-                        placeholder="Please select a cluster"
-                        showSearch={true}
-                        filterOption={false}
-                        onSearch={this.onSearch.bind(this, 'clusters')}
-                      >
-                        {clusters.map((v, i) => {
-                          const { name, _id: id } = v
-                          return (
-                            <Option value={id} key={i}>
-                              {name}
-                            </Option>
-                          )
-                        })}
-                      </Select>
-                    )}
-                  </FormItem>
-                </Col>
+                <Col span={10}>{formItemCluster}</Col>
 
                 <Col span={4}>
                   <FormItem label="Enabled">
