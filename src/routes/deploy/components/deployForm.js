@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
 import {
-  Modal,
-  Form,
+  Row,
+  Col,
+  Tag,
   Icon,
+  Form,
+  Modal,
   Input,
   Button,
   Select,
   Switch,
-  Row,
-  Col,
 } from 'antd'
 import * as mobx from 'mobx'
 import debounce from 'lodash.debounce'
@@ -108,7 +109,7 @@ class Deploy extends Component {
       return (
         <Col span={24} key={index}>
           <Row gutter={8}>
-            <Col span={8}>
+            <Col span={6}>
               <FormItem>
                 {getFieldDecorator(`${type}_array[${k}].key`, {
                   initialValue: key,
@@ -123,7 +124,7 @@ class Deploy extends Component {
                 })(<Input placeholder="key" />)}
               </FormItem>
             </Col>
-            <Col span={12}>
+            <Col span={14}>
               {type === 'image' ? (
                 <FormItem>
                   {getFieldDecorator(`${type}_array[${k}].image`, {
@@ -142,10 +143,11 @@ class Deploy extends Component {
                       onSearch={this.onSearch.bind(this, 'images')}
                     >
                       {images.map((v, i) => {
-                        const { repo_full_name, _id } = v
+                        const { repo_full_name, _id, region } = v
                         const value = `${_id}#${repo_full_name}`
                         return (
                           <Option value={value} key={i}>
+                            {region ? <Tag>{region}</Tag> : null}
                             {repo_full_name}
                           </Option>
                         )
@@ -239,9 +241,10 @@ class Deploy extends Component {
             onSearch={this.onSearch.bind(this, 'images')}
           >
             {selects.map((v, i) => {
-              const { repo_full_name, _id } = v
+              const { repo_full_name, _id, region } = v
               return (
                 <Option value={`${_id}#${repo_full_name}`} key={i}>
+                  {region ? <Tag>{region}</Tag> : null}
                   {repo_full_name}
                 </Option>
               )
@@ -336,7 +339,7 @@ class Deploy extends Component {
 
             <Col span={24}>
               <Row style={{ padding: '0 1em' }}>
-                <Col span={12}>
+                <Col span={8}>
                   {formItemsEnv}
                   <Col span={24}>
                     <Button type="dashed" onClick={this.add.bind(this, 'env')}>
@@ -344,7 +347,7 @@ class Deploy extends Component {
                     </Button>
                   </Col>
                 </Col>
-                <Col span={12}>
+                <Col span={16}>
                   {formItemsImage}
                   <Col span={24}>
                     <Button
