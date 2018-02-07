@@ -191,7 +191,7 @@ class Deploy extends Component {
     const { cluster_id: _id, name } = cluster
     _id && clusters.push({ _id, name })
     const selects = uniqby(clusters, '_id')
-    const selected = `${_id}#${name}`
+    const selected = (_id && `${_id}#${name}`) || ''
 
     return (
       <FormItem label="Cluster">
@@ -225,7 +225,7 @@ class Deploy extends Component {
     const { image_id: _id, repo_full_name } = trigger
     _id && images.push({ _id, repo_full_name })
     const selects = uniqby(images, '_id')
-    const selected = `${_id}#${repo_full_name}`
+    const selected = (_id && `${_id}#${repo_full_name}`) || ''
     return (
       <FormItem label="Trigger">
         {getFieldDecorator('trigger', {
