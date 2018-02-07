@@ -16,9 +16,9 @@ class Clusters extends Component {
     this.load()
   }
 
-  load = (current, pageSize) => {
+  load = current => {
     const { docker } = this.props
-    docker.loadClusters(current, pageSize)
+    docker.loadClusters(current)
   }
 
   create = values => {
@@ -78,11 +78,11 @@ class Clusters extends Component {
   render() {
     const { app, docker } = this.props
     const {
-      clusters,
-      clusters_loading,
-      clusters_count,
-      clusters_current,
-      clusters_size,
+      clusters: data,
+      clusters_loading: loading,
+      clusters_total: total,
+      clusters_page: current,
+      clusters_limit: pageSize,
     } = docker
     const { langs } = app
 
@@ -109,12 +109,12 @@ class Clusters extends Component {
                 </Row>
               )
             },
-            data: clusters,
-            loading: clusters_loading,
+            data,
+            loading,
             pagination: {
-              pageSize: clusters_size,
-              total: clusters_count,
-              current: clusters_current,
+              pageSize,
+              total,
+              current,
             },
             load: this.load,
             destroy: this.handleDelete,

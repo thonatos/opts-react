@@ -3,21 +3,21 @@ import { axios } from '~/utils/'
 
 class State {
   @observable _clusters = []
-  @observable clusters_count = 0
-  @observable clusters_current = 1
-  @observable clusters_size = 5
+  @observable clusters_total = 0
+  @observable clusters_page = 1
+  @observable clusters_limit = 5
   @observable clusters_loading = false
 
   @observable _images = []
-  @observable images_count = 0
-  @observable images_current = 1
-  @observable images_size = 5
+  @observable images_total = 0
+  @observable images_page = 1
+  @observable images_limit = 5
   @observable images_loading = false
 
   @observable _deploys = []
-  @observable deploys_count = 0
-  @observable deploys_current = 1
-  @observable deploys_size = 5
+  @observable deploys_total = 0
+  @observable deploys_page = 1
+  @observable deploys_limit = 10
   @observable deploys_loading = false
 
   @observable _images_search = []
@@ -42,15 +42,21 @@ class State {
     })
   }
 
-  requestWithPagination = async (offset = 1, limit = 100, options = {}) => {
+  requestWithPagination = async (pageNext = 1, options = {}) => {
     const { store, url } = options
     if (!store) {
       return
     }
+
+    // props
     const storage = `_${store}`
     const loading = `${store}_loading`
-    const current = `${store}_current`
-    const count = `${store}_count`
+    const page = `${store}_page`
+    const total = `${store}_total`
+    const limit = `${store}_limit`
+
+    // values
+    const _limit = this[limit]
 
     if (this[loading]) {
       return
@@ -59,13 +65,13 @@ class State {
     this[loading] = true
     try {
       const { data: res } = await this.request(
-        `${url}?limit=${limit}&offset=${offset - 1}`,
+        `${url}?limit=${_limit}&page=${pageNext}`,
         'get'
       )
       const { data, meta } = res
       this[storage] = data
-      this[count] = meta.total
-      this[current] = meta.offset
+      this[page] = meta.page
+      this[total] = meta.total
     } catch (error) {
     } finally {
       this[loading] = false

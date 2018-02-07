@@ -11,19 +11,20 @@ class Images extends Component {
     this.load()
   }
 
-  load = (current, pageSize) => {
+  load = current => {
     const { docker } = this.props
-    docker.loadImages(current, pageSize)
+    console.log(current)
+    docker.loadImages(current)
   }
 
   render() {
     const { app, docker } = this.props
     const {
-      images,
-      images_loading,
-      images_count,
-      images_current,
-      images_size,
+      images: data,
+      images_loading: loading,
+      images_total: total,
+      images_page: current,
+      images_limit: pageSize,
     } = docker
     const { langs } = app
 
@@ -32,15 +33,15 @@ class Images extends Component {
         <ImageTable
           {...{
             title: 'docker_image',
-            data: images,
-            loading: images_loading,
-            pagination: {
-              pageSize: images_size,
-              total: images_count,
-              current: images_current,
-            },
             load: this.load,
             langs,
+            data,
+            loading,
+            pagination: {
+              total,
+              current,
+              pageSize,
+            },
           }}
         />
       </Layout>

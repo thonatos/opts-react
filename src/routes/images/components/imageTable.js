@@ -4,9 +4,9 @@ import moment from 'moment'
 
 class ImageTable extends Component {
   onChange = (pagination, filters, sorter) => {
-    const { current, pageSize } = pagination
+    const { current } = pagination
     const { load } = this.props
-    load(current, pageSize)
+    load(current)
   }
 
   render() {

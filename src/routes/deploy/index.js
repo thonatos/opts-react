@@ -63,9 +63,9 @@ class Deploys extends Component {
     this.load()
   }
 
-  load = (current, pageSize) => {
+  load = current => {
     const { docker } = this.props
-    docker.loadDeploys(current, pageSize)
+    docker.loadDeploys(current)
   }
 
   update = values => {
@@ -80,8 +80,8 @@ class Deploys extends Component {
 
   // event
   onChange = (pagination, filters, sorter) => {
-    const { current, pageSize } = pagination
-    this.load(current, pageSize)
+    const { current } = pagination
+    this.load(current)
   }
 
   showModal = data => {
@@ -165,18 +165,12 @@ class Deploys extends Component {
     const { langs } = app
 
     const {
-      deploys,
-      deploys_size,
-      deploys_count,
-      deploys_current,
+      deploys: data,
+      deploys_limit: pageSize,
+      deploys_total: total,
+      deploys_page: current,
       deploys_loading: loading,
     } = docker
-
-    const pagination = {
-      pageSize: deploys_size,
-      total: deploys_count,
-      current: deploys_current,
-    }
 
     return (
       <Layout title="Deploys">
@@ -201,9 +195,13 @@ class Deploys extends Component {
                 </Row>
               )
             },
-            data: deploys,
+            data,
             loading,
-            pagination,
+            pagination: {
+              pageSize,
+              total,
+              current,
+            },
             load: this.load,
             edit: this.showModal,
             destroy: this.handleDelete,
