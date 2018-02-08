@@ -7,7 +7,14 @@ import { observer, inject } from 'mobx-react'
 // 统一引入样式
 import './App.css'
 import RootStore from '~/store/root'
-import { Home, Deploy, Images, Clusters, ClustersDetail } from '~/routes/'
+import {
+  Home,
+  Deploy,
+  Image,
+  ImageTag,
+  Cluster,
+  ClusterDetail,
+} from '~/routes/'
 import { Protected } from '~/components/'
 
 const rootStore = new RootStore()
@@ -23,13 +30,14 @@ class Wrap extends Component {
           <Switch>
             <Route exact path="/" component={Home} />
             <Protected path="/deploy" component={Deploy} />
-            <Protected path="/images" component={Images} />
+            <Protected path="/images/:id" component={ImageTag} exactly={true} />
+            <Protected path="/images" component={Image} />
             <Protected
               path="/clusters/:id"
-              component={ClustersDetail}
+              component={ClusterDetail}
               exactly={true}
             />
-            <Protected path="/clusters" component={Clusters} exactly={true} />
+            <Protected path="/clusters" component={Cluster} exactly={true} />
           </Switch>
         </LocaleProvider>
       </Router>
