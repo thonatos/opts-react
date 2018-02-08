@@ -180,7 +180,7 @@ class Deploys extends Component {
               return (
                 <Row gutter={16}>
                   <Col span={12}>
-                    <p>Docker Deploys</p>
+                    <p>{langs['docker_deploy']}</p>
                   </Col>
                   <Col
                     span={12}
@@ -189,7 +189,7 @@ class Deploys extends Component {
                     }}
                   >
                     <Button type="primary" onClick={this.showModal}>
-                      Add Deploy
+                      {langs['action_create']}
                     </Button>
                   </Col>
                 </Row>

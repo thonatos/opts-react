@@ -53,12 +53,11 @@ class DeployTable extends Component {
         },
       },
       {
-        title: langs['deploy_created_at'],
+        title: langs['created_at'],
         dataIndex: 'created_at',
         key: 'created_at',
         render: text => {
-          const date = moment(text).format('MM/DD/YYYY HH:mm:ss ZZ')
-          return <p>{date}</p>
+          return moment(text).format('MM/DD/YYYY HH:mm:ss ZZ')
         },
       },
       {
@@ -69,7 +68,9 @@ class DeployTable extends Component {
           const { _id: id } = record
           return (
             <div>
-              <Button onClick={edit.bind(null, record)}>Edit</Button>
+              <Button onClick={edit.bind(null, record)}>
+                {langs['action_edit']}
+              </Button>
               <Button
                 type="danger"
                 style={{
@@ -79,7 +80,7 @@ class DeployTable extends Component {
                   destroy(id)
                 }}
               >
-                Delete
+                {langs['action_delete']}
               </Button>
             </div>
           )
