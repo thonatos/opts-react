@@ -1,12 +1,22 @@
 {
   "framework": "React",
   "administrator": "苏依",
-  "docker_cluster": "Docker 集群",
+  "docker_cluster": "集群",
+  "docker_deploy": "部署",
+  "docker_image": "镜像",
+  "docker_image_tag": "镜像标签",
+
+  "action_create": "创建",
+  "action_edit": "编辑",
+  "action_delete": "删除",
+  "updated_at": "更新时间",
+  "created_at": "创建时间",
+
   "cluster_name": "集群名称",
   "cluster_region": "所在区域",
-  "cluster_created_at": "创建时间",
   "cluster_action": "操作",
   "cluster_apps": "集群应用",
+
   "app_name": "名称",
   "app_description": "描述",
   "app_desired_state": "期望状态",
@@ -14,6 +24,7 @@
   "app_updated": "更新时间",
   "app_created": "创建时间",
   "app_service": "服务",
+
   "service_name": "名称",
   "service_project": "项目",
   "service_description": "描述",
@@ -21,12 +32,14 @@
   "service_current_state": "当前状态",
   "service_updated": "更新时间",
   "service_created": "创建时间",
-  "docker_image": "Docker 镜像",
+
   "image_name": "仓库名称",
   "image_namespace": "命名空间",
   "image_region": "可用区",
   "image_repo_full_name": "仓库全名",
-  "image_created_at": "创建时间",
+  "image_tag_name": "镜像标签",
+  "image_tag_pushed_at": "推送时间",
+
   "deploy": "部署",
   "deploy_app": "应用名称",
   "deploy_cluster": "集群ID",
