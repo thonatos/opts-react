@@ -20,6 +20,12 @@ class State {
   @observable deploys_limit = 10
   @observable deploys_loading = false
 
+  @observable _image_tags = []
+  @observable image_tags_total = 0
+  @observable image_tags_page = 1
+  @observable image_tags_limit = 10
+  @observable image_tags_loading = false
+
   @observable _images_search = []
   @observable _clusters_search = []
 
@@ -226,6 +232,20 @@ class State {
       console.log(error)
       throw new Error('create failed.')
     }
+  }
+
+  @computed
+  get image_tags() {
+    return toJS(this._image_tags)
+  }
+
+  @action
+  loadImageTags = async (id, ...args) => {
+    const opt = {
+      store: 'image_tags',
+      url: `/api/docker/images/${id}`,
+    }
+    return this.requestWithPagination(...args, opt)
   }
 }
 

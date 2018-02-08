@@ -1,7 +1,8 @@
 import Home from './home/'
 import Deploy from './deploy/'
-import Images from './images/'
-import Clusters from './clusters/'
-import ClustersDetail from './clustersDetail/'
+import Image from './image/'
+import ImageTag from './imageTag/'
+import Cluster from './cluster/'
+import ClusterDetail from './clusterDetail/'
 
-export { Home, Deploy, Images, Clusters, ClustersDetail }
+export { Home, Deploy, Image, ImageTag, Cluster, ClusterDetail }
