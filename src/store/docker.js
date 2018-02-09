@@ -11,7 +11,7 @@ class State {
   @observable _images = []
   @observable images_total = 0
   @observable images_page = 1
-  @observable images_limit = 5
+  @observable images_limit = 10
   @observable images_loading = false
 
   @observable _deploys = []
