@@ -54,7 +54,7 @@ class Basic extends Component {
         >
           <div className={styles.logo}>
             <img src={logo} alt="" />
-            <span>(Dev)Opts</span>
+            <span>Maidops</span>
           </div>
           <SideMenu {...{ current_path, menu, logout }} />
         </Sider>
