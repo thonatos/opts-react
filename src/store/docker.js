@@ -1,33 +1,43 @@
 import { observable, action, computed, toJS } from 'mobx'
 import { axios } from '~/utils/'
 
+const getStorageProps = store => {
+  return ['', 'page', 'total', 'limit'].map(
+    key => (key ? `${store}_${key}` : `_${store}`)
+  )
+}
+
 class State {
+  @observable loading = false
+
   @observable _clusters = []
   @observable clusters_total = 0
   @observable clusters_page = 1
-  @observable clusters_limit = 5
-  @observable clusters_loading = false
+  @observable clusters_limit = 2
+
+  @observable _clusters_kubernetes = []
+  @observable clusters_kubernetes_total = 0
+  @observable clusters_kubernetes_page = 1
+  @observable clusters_kubernetes_limit = 5
 
   @observable _images = []
   @observable images_total = 0
   @observable images_page = 1
   @observable images_limit = 10
-  @observable images_loading = false
 
   @observable _deploys = []
   @observable deploys_total = 0
   @observable deploys_page = 1
   @observable deploys_limit = 10
-  @observable deploys_loading = false
 
   @observable _image_tags = []
   @observable image_tags_total = 0
   @observable image_tags_page = 1
   @observable image_tags_limit = 10
-  @observable image_tags_loading = false
 
   @observable _images_search = []
   @observable _clusters_search = []
+  @observable _clusters_kubernetes_search = []
 
   @observable _apps = new Map()
 
@@ -56,7 +66,6 @@ class State {
 
     // props
     const storage = `_${store}`
-    const loading = `${store}_loading`
     const page = `${store}_page`
     const total = `${store}_total`
     const limit = `${store}_limit`
@@ -64,11 +73,11 @@ class State {
     // values
     const _limit = this[limit]
 
-    if (this[loading]) {
+    if (this.loading) {
       return
     }
 
-    this[loading] = true
+    this.loading = true
     try {
       const { data: res } = await this.request(
         `${url}?limit=${_limit}&page=${pageNext}`,
@@ -80,46 +89,77 @@ class State {
       this[total] = meta.total
     } catch (error) {
     } finally {
-      this[loading] = false
+      this.loading = false
     }
   }
 
-  // clusters
+  paginate = async (url, { store, pageNext = 1 }) => {
+    if (!url || !store || this.loading) return
 
-  @computed
-  get clusters() {
-    return toJS(this._clusters)
-  }
+    // props
+    const [
+      storage,
+      storage_page,
+      storage_total,
+      storage_limit,
+    ] = getStorageProps(store)
 
-  @computed
-  get clustersSearch() {
-    return toJS(this._clusters_search)
-  }
+    // values
+    const limit = this[storage_limit]
 
-  @action
-  loadClusters = async (...args) => {
-    const opt = {
-      store: 'clusters',
-      url: '/api/docker/clusters',
+    this.loading = true
+    try {
+      const response = await this.request(
+        `${url}?limit=${limit}&page=${pageNext}`,
+        'get'
+      )
+      const { data, meta } = response.data
+      this[storage] = data
+      this[storage_page] = meta.page
+      this[storage_total] = meta.total
+    } catch (error) {
+    } finally {
+      this.loading = false
     }
-    return this.requestWithPagination(...args, opt)
+  }
+
+  load = async (url, { id, store }) => {
+    try {
+      const { data } = await this.request(url, 'get')
+      this[`_${store}`].set(id, data)
+    } catch (error) {}
   }
 
   @action
-  searchClusters = async (name = '') => {
-    const { data } = await this.request(`/api/docker/clusters?s=${name}`, 'get')
-    this._clusters_search = data.data || []
+  index = async (store, options) => {
+    let url = `/api/docker/${store}`
+    const { id, storage, pagination = true } = options
+
+    if (id) {
+      url += `/${id}`
+    }
+
+    if (!pagination) {
+      return this.load(url, {
+        store: storage || store,
+        ...options,
+      })
+    }
+
+    return this.paginate(url, {
+      store: storage || store,
+      ...options,
+    })
   }
 
   @action
-  createCluster = async values => {
+  create = async (store, options) => {
     try {
       const { data } = await this.request(
-        '/api/docker/clusters',
+        `/api/docker/${store}`,
         'post',
-        values
+        options
       )
-
       return data
     } catch (error) {
       console.log(error)
@@ -128,10 +168,29 @@ class State {
   }
 
   @action
-  deleteCluster = async (id = '') => {
+  update = async (store, { id, ...rest }) => {
+    let url = `/api/docker/${store}`
+    let method = 'post'
+
+    if (id) {
+      url += `/${id}`
+      method = 'put'
+    }
+
+    try {
+      const { data } = await this.request(url, method, rest)
+      return data
+    } catch (error) {
+      console.log(error)
+      throw new Error('create failed.')
+    }
+  }
+
+  @action
+  destroy = async (store, id) => {
     try {
       const { data } = await this.request(
-        `/api/docker/clusters/${id}`,
+        `/api/docker/${store}/${id}`,
         'delete'
       )
       return data
@@ -141,7 +200,17 @@ class State {
     }
   }
 
-  // apps
+  @action
+  search = async (store, name) => {
+    const { data } = await this.request(`/api/docker/${store}?s=${name}`, 'get')
+    this[`_${store}_search`] = data.data || []
+  }
+
+  // Computed
+  @computed
+  get clusters() {
+    return toJS(this._clusters)
+  }
 
   @computed
   get apps() {
@@ -154,84 +223,9 @@ class State {
     return _apps
   }
 
-  @action
-  loadApps = async id => {
-    try {
-      const { data } = await this.request(`/api/docker/clusters/${id}`, 'get')
-      this._apps.set(id, data)
-    } catch (error) {
-    } finally {
-    }
-  }
-
-  // images
-
   @computed
   get images() {
     return toJS(this._images)
-  }
-
-  @computed
-  get imagesSearch() {
-    return toJS(this._images_search)
-  }
-
-  @action
-  loadImages = async (...args) => {
-    const opt = {
-      store: 'images',
-      url: '/api/docker/images',
-    }
-    return this.requestWithPagination(...args, opt)
-  }
-
-  @action
-  searchImages = async (name = '') => {
-    const { data } = await this.request(`/api/docker/images?s=${name}`, 'get')
-    this._images_search = data.data || []
-  }
-
-  // deploys
-  @computed
-  get deploys() {
-    return toJS(this._deploys)
-  }
-
-  @action
-  loadDeploys = async (...args) => {
-    const opt = {
-      store: 'deploys',
-      url: '/api/docker/deploys',
-    }
-    return this.requestWithPagination(...args, opt)
-  }
-
-  @action
-  createOrUpdateDeploy = async dep => {
-    try {
-      let url = '/api/docker/deploys'
-      let method = 'post'
-      if (dep.id) {
-        url = url + `/${dep.id}`
-        method = 'put'
-      }
-      const { data } = await this.request(url, method, dep)
-      return data
-    } catch (error) {
-      console.log(error)
-      throw new Error('create failed.')
-    }
-  }
-
-  @action
-  deleteDeploy = async (id = '') => {
-    try {
-      const { data } = await this.request(`/api/docker/deploys/${id}`, 'delete')
-      return data
-    } catch (error) {
-      console.log(error)
-      throw new Error('create failed.')
-    }
   }
 
   @computed
@@ -239,13 +233,19 @@ class State {
     return toJS(this._image_tags)
   }
 
-  @action
-  loadImageTags = async (id, ...args) => {
-    const opt = {
-      store: 'image_tags',
-      url: `/api/docker/images/${id}`,
-    }
-    return this.requestWithPagination(...args, opt)
+  @computed
+  get deploys() {
+    return toJS(this._deploys)
+  }
+
+  @computed
+  get clusters_search() {
+    return toJS(this._clusters_search)
+  }
+
+  @computed
+  get images_search() {
+    return toJS(this._images_search)
   }
 }
 
