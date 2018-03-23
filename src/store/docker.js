@@ -45,6 +45,8 @@ class State {
     this.root = root
   }
 
+  // method
+
   request = async (url, method, data = {}) => {
     const token = this.root.auth.token
     return axios({
@@ -58,39 +60,11 @@ class State {
     })
   }
 
-  requestWithPagination = async (pageNext = 1, options = {}) => {
-    const { store, url } = options
-    if (!store) {
-      return
-    }
-
-    // props
-    const storage = `_${store}`
-    const page = `${store}_page`
-    const total = `${store}_total`
-    const limit = `${store}_limit`
-
-    // values
-    const _limit = this[limit]
-
-    if (this.loading) {
-      return
-    }
-
-    this.loading = true
+  load = async (url, { id, store }) => {
     try {
-      const { data: res } = await this.request(
-        `${url}?limit=${_limit}&page=${pageNext}`,
-        'get'
-      )
-      const { data, meta } = res
-      this[storage] = data
-      this[page] = meta.page
-      this[total] = meta.total
-    } catch (error) {
-    } finally {
-      this.loading = false
-    }
+      const { data } = await this.request(url, 'get')
+      this[`_${store}`].set(id, data)
+    } catch (error) {}
   }
 
   paginate = async (url, { store, pageNext = 1 }) => {
@@ -123,12 +97,7 @@ class State {
     }
   }
 
-  load = async (url, { id, store }) => {
-    try {
-      const { data } = await this.request(url, 'get')
-      this[`_${store}`].set(id, data)
-    } catch (error) {}
-  }
+  // action
 
   @action
   index = async (store, options) => {
@@ -207,6 +176,7 @@ class State {
   }
 
   // Computed
+
   @computed
   get clusters() {
     return toJS(this._clusters)
