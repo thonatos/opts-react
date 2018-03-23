@@ -32,10 +32,10 @@ class State {
   }
 
   @action
-  update(token, username, userrole) {
-    this.token = token;
-    this.username = username;
-    this.userrole = userrole;
+  update(token = '', username = '', userrole = '') {
+    this.token = token
+    this.username = username
+    this.userrole = userrole
   }
 
   @action
@@ -46,11 +46,7 @@ class State {
         password,
       })
       const { token, info } = data
-      const { ...rest } = info
-      // this.token = token      
-      // this.userrole = info.userrole
-      // this.username = info.username
-      this.update(token, rest)
+      this.update(token, ...info)
     } catch (error) {
       console.log(error)
     }
@@ -58,7 +54,7 @@ class State {
 
   @action
   logout = () => {
-    this.update();
+    this.update()
   }
 }
 
