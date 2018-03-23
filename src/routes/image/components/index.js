@@ -1,3 +1,3 @@
-import ImageTable from './imageTable'
+import ImageTable from './image_table'
 
 export { ImageTable }

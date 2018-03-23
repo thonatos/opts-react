@@ -14,15 +14,19 @@ class Cluster extends Component {
   load = current => {
     const { docker, match } = this.props
     const id = match.params.id
-    docker.loadImageTags(id, current)
+    docker.index('images', {
+      id,
+      storage: 'image_tags',
+      pageNext: current,
+    })
   }
 
   render() {
     const { docker, app } = this.props
     const { langs } = app
     const {
+      loading,
       image_tags: data,
-      image_tags_loading: loading,
       image_tags_total: total,
       image_tags_page: current,
       image_tags_limit: pageSize,

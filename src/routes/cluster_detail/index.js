@@ -10,13 +10,18 @@ class Cluster extends Component {
   componentDidMount() {
     const { docker, match } = this.props
     const id = match.params.id
-    docker.loadApps(id)
+    docker.index('clusters', {
+      id,
+      storage: 'apps',
+      pagination: false,
+    })
   }
 
   render() {
     const { docker, match, app } = this.props
     const { langs } = app
     const { id } = match.params
+    console.log(docker.apps)
     const apps = docker.apps[id] || []
 
     return (

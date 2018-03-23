@@ -65,17 +65,19 @@ class Deploys extends Component {
 
   load = current => {
     const { docker } = this.props
-    docker.loadDeploys(current)
+    docker.index('deploys', {
+      pageNext: current,
+    })
   }
 
   update = values => {
     const { docker } = this.props
-    return docker.createOrUpdateDeploy(values)
+    return docker.update('deploys', values)
   }
 
   destory = id => {
     const { docker } = this.props
-    return docker.deleteDeploy(id)
+    return docker.destory('deploys', id)
   }
 
   // event
@@ -133,26 +135,13 @@ class Deploys extends Component {
       })
   }
 
-  handleSearch = (type, value) => {
-    if (!value) {
+  handleSearch = (store, name) => {
+    if (!name) {
       return
     }
-
     const { docker } = this.props
-    const { searchClusters, searchImages } = docker
-
-    switch (type) {
-      case 'images':
-        searchImages(value)
-        break
-
-      case 'clusters':
-        searchClusters(value)
-        break
-
-      default:
-        break
-    }
+    const { search } = docker
+    search(store, name)
   }
 
   saveFormRef = form => {
@@ -161,15 +150,15 @@ class Deploys extends Component {
 
   render() {
     const { app, docker } = this.props
-    const { imagesSearch, clustersSearch } = docker
+    const { images_search, clusters_search } = docker
     const { langs } = app
 
     const {
+      loading,
       deploys: data,
       deploys_limit: pageSize,
       deploys_total: total,
       deploys_page: current,
-      deploys_loading: loading,
     } = docker
 
     return (
@@ -213,8 +202,8 @@ class Deploys extends Component {
           title={langs['deploy']}
           langs={langs}
           data={this.state.data}
-          images={imagesSearch}
-          clusters={clustersSearch}
+          images={images_search}
+          clusters={clusters_search}
           visible={this.state.visible}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}

@@ -13,14 +13,16 @@ class Images extends Component {
 
   load = current => {
     const { docker } = this.props
-    docker.loadImages(current)
+    docker.index('images', {
+      pageNext: current,
+    })
   }
 
   render() {
     const { app, docker } = this.props
     const {
+      loading,
       images: data,
-      images_loading: loading,
       images_total: total,
       images_page: current,
       images_limit: pageSize,

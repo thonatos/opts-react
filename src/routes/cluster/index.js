@@ -18,17 +18,19 @@ class Clusters extends Component {
 
   load = current => {
     const { docker } = this.props
-    docker.loadClusters(current)
+    docker.index('clusters', {
+      pageNext: current,
+    })
   }
 
   create = values => {
     const { docker } = this.props
-    return docker.createCluster(values)
+    return docker.update('clusters', values)
   }
 
   destory = id => {
     const { docker } = this.props
-    return docker.deleteCluster(id)
+    return docker.destory('clusters', id)
   }
 
   showModal = () => {
@@ -78,8 +80,8 @@ class Clusters extends Component {
   render() {
     const { app, docker } = this.props
     const {
+      loading,
       clusters: data,
-      clusters_loading: loading,
       clusters_total: total,
       clusters_page: current,
       clusters_limit: pageSize,
