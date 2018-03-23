@@ -1,4 +1,4 @@
-exports.menu = [
+export const menu = [
   {
     name: 'Images',
     href: '/images',
@@ -16,4 +16,4 @@ exports.menu = [
   },
 ]
 
-exports.api_server = 'http://localhost:7001'
+export const api_server = 'http://localhost:7001'
