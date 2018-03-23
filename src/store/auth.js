@@ -8,6 +8,7 @@ const isAuthed = token => {
   const { exp } = JSON.parse(Base64.decode(token.split('.')[1] || '{}'))
   return exp - Date.now() / 1000 > 0
 }
+
 class State {
   @persist
   @observable
@@ -31,6 +32,13 @@ class State {
   }
 
   @action
+  update(token, username, userrole) {
+    this.token = token;
+    this.username = username;
+    this.userrole = userrole;
+  }
+
+  @action
   login = async (username, password) => {
     try {
       const { data } = await axios.post('/auth/jwt/sign', {
@@ -38,9 +46,11 @@ class State {
         password,
       })
       const { token, info } = data
-      this.token = token
-      this.userrole = info.userrole
-      this.username = info.username
+      const { ...rest } = info
+      // this.token = token      
+      // this.userrole = info.userrole
+      // this.username = info.username
+      this.update(token, rest)
     } catch (error) {
       console.log(error)
     }
@@ -48,9 +58,7 @@ class State {
 
   @action
   logout = () => {
-    this.token = ''
-    this.username = ''
-    this.userrole = ''
+    this.update();
   }
 }
 
