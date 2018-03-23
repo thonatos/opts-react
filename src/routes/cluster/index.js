@@ -28,9 +28,9 @@ class Clusters extends Component {
     return docker.update('clusters', values)
   }
 
-  destory = id => {
+  destroy = id => {
     const { docker } = this.props
-    return docker.destory('clusters', id)
+    return docker.destroy('clusters', id)
   }
 
   showModal = () => {
@@ -63,7 +63,7 @@ class Clusters extends Component {
   }
 
   handleDelete = id => {
-    this.destory(id)
+    this.destroy(id)
       .then(res => {
         console.log('#res', res)
         this.load()
