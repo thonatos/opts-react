@@ -46,6 +46,7 @@
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.8",
+    "pre-commit": "^1.2.2",
     "prettier": "^1.9.2",
     "promise": "8.0.1",
     "raf": "3.4.0",
@@ -70,6 +71,9 @@
     "test": "node scripts/test.js --env=jsdom",
     "format": "prettier --single-quote --no-semi --trailing-comma es5 --write 'src/**/*.{js,jsx,json,css}'"
   },
+  "pre-commit": [
+    "format"
+  ],
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,mjs}"
