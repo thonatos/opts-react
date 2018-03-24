@@ -1,6 +1,6 @@
 export const menu = [
   {
-    name: 'Images',
+    name: 'Docker Images',
     href: '/images',
     icon: 'file',
   },
@@ -15,7 +15,7 @@ export const menu = [
     icon: 'desktop',
   },
   {
-    name: 'Deploy',
+    name: 'Deployments',
     href: '/deploy',
     icon: 'tool',
   },
