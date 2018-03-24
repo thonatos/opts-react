@@ -21,5 +21,4 @@ export const menu = [
   },
 ]
 
-// export const api_server = 
 export const api_server = process.env.REACT_APP_MIADOPS_API_SERVER
