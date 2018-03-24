@@ -183,6 +183,11 @@ class State {
   }
 
   @computed
+  get clusters_kubernetes() {
+    return toJS(this._clusters_kubernetes)
+  }
+
+  @computed
   get apps() {
     const keys = this._apps.keys()
     const _apps = {}
