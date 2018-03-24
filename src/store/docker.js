@@ -219,6 +219,11 @@ class State {
   }
 
   @computed
+  get clusters_kubernetes_search() {
+    return toJS(this._clusters_kubernetes_search)
+  }
+
+  @computed
   get images_search() {
     return toJS(this._images_search)
   }
