@@ -38,6 +38,7 @@ class Deploy extends Component {
       env: 0,
       image: 0,
     },
+    platform: 'docker_swarm',
   }
 
   reset = () => {
@@ -76,6 +77,18 @@ class Deploy extends Component {
     form.setFieldsValue({
       [type]: nextKeys,
     })
+  }
+
+  onPlatformChange = platform => {
+    const { form } = this.props
+    this.setState(
+      {
+        platform,
+      },
+      () => {
+        form.resetFields(['cluster'])
+      }
+    )
   }
 
   onSearch = (...args) => {
@@ -188,13 +201,20 @@ class Deploy extends Component {
   }
 
   getClusterItem = (cluster = {}) => {
-    const { clusters, form } = this.props
+    const { clusters_swarm, clusters_kubernetes, form } = this.props
     const { getFieldDecorator } = form
+    const clusters =
+      this.state.platform === 'docker_swarm'
+        ? clusters_swarm
+        : clusters_kubernetes
     const { cluster_id: _id, name } = cluster
     _id && clusters.push({ _id, name })
     const selects = uniqby(clusters, '_id')
     const selected = (_id && `${_id}#${name}`) || ''
-
+    const storage =
+      this.state.platform === 'docker_swarm'
+        ? 'clusters'
+        : 'clusters_kubernetes'
     return (
       <FormItem label="Cluster">
         {getFieldDecorator('cluster', {
@@ -205,7 +225,7 @@ class Deploy extends Component {
             placeholder="Please select a cluster"
             showSearch={true}
             filterOption={false}
-            onSearch={this.onSearch.bind(this, 'clusters')}
+            onSearch={this.onSearch.bind(this, storage)}
           >
             {selects.map((v, i) => {
               const { name, _id } = v
@@ -265,6 +285,7 @@ class Deploy extends Component {
       cluster,
       enabled,
       trigger,
+      platform,
       template,
       envs: envArray,
       images: imageArray,
@@ -303,7 +324,21 @@ class Deploy extends Component {
 
             <Col span={24}>
               <Row style={{ padding: '1em' }} gutter={16}>
-                <Col span={10}>
+                <Col span={4}>
+                  <FormItem label="Platform">
+                    {getFieldDecorator('platform', {
+                      initialValue: platform || this.state.platform,
+                      rules: [{ required: true }],
+                    })(
+                      <Select onChange={this.onPlatformChange}>
+                        <Option value="docker_swarm">Docker Swarm</Option>
+                        <Option value="kubernetes">Kubernetes</Option>
+                      </Select>
+                    )}
+                  </FormItem>
+                </Col>
+
+                <Col span={8}>
                   <FormItem label="App Name">
                     {getFieldDecorator('app', {
                       initialValue: app,
@@ -312,7 +347,7 @@ class Deploy extends Component {
                   </FormItem>
                 </Col>
 
-                <Col span={10}>{formItemCluster}</Col>
+                <Col span={8}>{formItemCluster}</Col>
 
                 <Col span={4}>
                   <FormItem label="Enabled">

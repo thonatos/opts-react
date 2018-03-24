@@ -150,7 +150,11 @@ class Deploys extends Component {
 
   render() {
     const { app, docker } = this.props
-    const { images_search, clusters_search } = docker
+    const {
+      images_search,
+      clusters_search,
+      clusters_kubernetes_search,
+    } = docker
     const { langs } = app
 
     const {
@@ -203,7 +207,8 @@ class Deploys extends Component {
           langs={langs}
           data={this.state.data}
           images={images_search}
-          clusters={clusters_search}
+          clusters_swarm={clusters_search}
+          clusters_kubernetes={clusters_kubernetes_search}
           visible={this.state.visible}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}

@@ -30,7 +30,7 @@ class Clusters extends Component {
 
   destroy = id => {
     const { docker } = this.props
-    return docker.destroy('clusters', id)
+    return docker.destroy('clusters_kubernetes', id)
   }
 
   showModal = () => {
