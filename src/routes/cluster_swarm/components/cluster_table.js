@@ -42,7 +42,7 @@ class ClusterTable extends Component {
           return (
             <div>
               <Button>
-                <Link to={`/clusters/${id}`}>{langs['cluster_apps']}</Link>
+                <Link to={`/clusters-swarm/${id}`}>{langs['cluster_apps']}</Link>
               </Button>
 
               <Button
