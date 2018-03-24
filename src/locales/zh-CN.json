@@ -14,6 +14,7 @@
 
   "cluster_name": "集群名称",
   "cluster_region": "所在区域",
+  "cluster_namespace": "命名空间",
   "cluster_action": "操作",
   "cluster_apps": "集群应用",
 
