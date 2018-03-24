@@ -5,8 +5,13 @@ export const menu = [
     icon: 'file',
   },
   {
-    name: 'Clusters',
-    href: '/clusters',
+    name: 'Clusters Swarm',
+    href: '/clusters-swarm',
+    icon: 'desktop',
+  },
+  {
+    name: 'Clusters Kubernetes',
+    href: '/clusters-kubernetes',
     icon: 'desktop',
   },
   {
