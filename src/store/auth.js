@@ -32,7 +32,8 @@ class State {
   }
 
   @action
-  update(token = '', username = '', userrole = '') {
+  update(data = {}) {
+    const { token = '', username = '', userrole = '' } = data
     this.token = token
     this.username = username
     this.userrole = userrole
@@ -46,7 +47,10 @@ class State {
         password,
       })
       const { token, info } = data
-      this.update(token, ...info)
+      this.update({
+        token,
+        ...info,
+      })
     } catch (error) {
       console.log(error)
     }
