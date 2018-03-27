@@ -5,7 +5,7 @@ import { Basic as Layout } from '~/layouts/'
 
 import { ClusterTable, ClusterForm } from './components/'
 
-@inject('docker', 'app')
+@inject('container', 'app')
 @observer
 class Clusters extends Component {
   state = {
@@ -17,20 +17,18 @@ class Clusters extends Component {
   }
 
   load = current => {
-    const { docker } = this.props
-    docker.index('clusters', {
+    const { container } = this.props
+    container.index('docker', {
       pageNext: current,
     })
   }
 
   create = values => {
-    const { docker } = this.props
-    return docker.update('clusters', values)
+    return this.props.container.update('docker', values)
   }
 
   destroy = id => {
-    const { docker } = this.props
-    return docker.destroy('clusters', id)
+    return this.props.container.destroy('docker', id)
   }
 
   showModal = () => {
@@ -78,25 +76,25 @@ class Clusters extends Component {
   }
 
   render() {
-    const { app, docker } = this.props
+    const { app, container } = this.props
     const {
       loading,
-      clusters: data,
-      clusters_total: total,
-      clusters_page: current,
-      clusters_limit: pageSize,
-    } = docker
+      docker: data,
+      docker_total: total,
+      docker_page: current,
+      docker_limit: pageSize,
+    } = container
     const { langs } = app
 
     return (
-      <Layout title="Clusters">
+      <Layout title="Docker">
         <ClusterTable
           {...{
             title: () => {
               return (
                 <Row gutter={16}>
                   <Col span={12}>
-                    <p>Docker Swarm Clusters</p>
+                    <p>{langs['container_docker']}</p>
                   </Col>
                   <Col
                     span={12}
@@ -105,7 +103,7 @@ class Clusters extends Component {
                     }}
                   >
                     <Button type="primary" onClick={this.showModal}>
-                      Add Swarm Cluster
+                      {langs['action_create']}
                     </Button>
                   </Col>
                 </Row>
@@ -125,7 +123,7 @@ class Clusters extends Component {
         />
 
         <ClusterForm
-          title="Add Docker Cluster"
+          title={langs['action_create']}
           langs={langs}
           visible={this.state.visible}
           onCancel={this.handleCancel}

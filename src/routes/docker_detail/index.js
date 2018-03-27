@@ -4,13 +4,13 @@ import { observer, inject } from 'mobx-react'
 import { Basic as Layout } from '~/layouts/'
 import { AppTable } from './components/'
 
-@inject('docker', 'app')
+@inject('container', 'app')
 @observer
-class Cluster extends Component {
+class ClusterDetail extends Component {
   componentDidMount() {
-    const { docker, match } = this.props
+    const { container, match } = this.props
     const id = match.params.id
-    docker.index('clusters', {
+    container.index('docker', {
       id,
       storage: 'apps',
       pagination: false,
@@ -18,14 +18,14 @@ class Cluster extends Component {
   }
 
   render() {
-    const { docker, match, app } = this.props
+    const { container, match, app } = this.props
     const { langs } = app
     const { id } = match.params
-    console.log(docker.apps)
-    const apps = docker.apps[id] || []
+    console.log(container.apps)
+    const apps = container.apps[id] || []
 
     return (
-      <Layout title="Clusters">
+      <Layout title="Docker Apps">
         <AppTable
           {...{
             title: 'cluster_apps',
@@ -38,4 +38,4 @@ class Cluster extends Component {
   }
 }
 
-export default Cluster
+export default ClusterDetail

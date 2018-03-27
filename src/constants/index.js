@@ -1,17 +1,17 @@
 export const menu = [
   {
-    name: 'Docker Images',
+    name: 'Images',
     href: '/images',
     icon: 'file',
   },
   {
-    name: 'Clusters Swarm',
-    href: '/clusters-swarm',
+    name: 'Docker',
+    href: '/docker',
     icon: 'desktop',
   },
   {
-    name: 'Clusters Kubernetes',
-    href: '/clusters-kubernetes',
+    name: 'Kubernetes',
+    href: '/kubernetes',
     icon: 'desktop',
   },
   {

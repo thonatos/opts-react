@@ -8,6 +8,19 @@ import { SideMenu, UserInfo } from '~/components/'
 import styles from './index.module.css'
 import logo from '~/assets/logo.svg'
 
+const style = {
+  header: {
+    background: '#fff',
+    padding: 0,
+  },
+  content: {
+    margin: '24px 16px',
+    padding: 24,
+    background: '#fff',
+    minHeight: 280,
+  },
+}
+
 const { Header, Sider, Content } = Layout
 
 @inject('app', 'auth')
@@ -61,7 +74,7 @@ class Basic extends Component {
 
         {/* layout */}
         <Layout>
-          <Header style={{ background: '#fff', padding: 0 }}>
+          <Header style={style.header}>
             <Row type="flex" justify="space-between" align="middle">
               <Col>
                 <Icon
@@ -75,16 +88,7 @@ class Basic extends Component {
               </Col>
             </Row>
           </Header>
-          <Content
-            style={{
-              margin: '24px 16px',
-              padding: 24,
-              background: '#fff',
-              minHeight: 280,
-            }}
-          >
-            {children}
-          </Content>
+          <Content style={style.content}>{children}</Content>
         </Layout>
       </Layout>
     )

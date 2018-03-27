@@ -51,7 +51,7 @@ const serialize = data => {
   formatImageArray(data)
 }
 
-@inject('docker', 'app')
+@inject('container', 'app')
 @observer
 class Deploys extends Component {
   state = {
@@ -64,20 +64,17 @@ class Deploys extends Component {
   }
 
   load = current => {
-    const { docker } = this.props
-    docker.index('deploys', {
+    this.props.container.index('deploys', {
       pageNext: current,
     })
   }
 
   update = values => {
-    const { docker } = this.props
-    return docker.update('deploys', values)
+    return this.props.container.update('deploys', values)
   }
 
   destroy = id => {
-    const { docker } = this.props
-    return docker.destroy('deploys', id)
+    return this.props.container.destroy('deploys', id)
   }
 
   // event
@@ -139,8 +136,8 @@ class Deploys extends Component {
     if (!name) {
       return
     }
-    const { docker } = this.props
-    const { search } = docker
+    const { container } = this.props
+    const { search } = container
     search(store, name)
   }
 
@@ -149,12 +146,8 @@ class Deploys extends Component {
   }
 
   render() {
-    const { app, docker } = this.props
-    const {
-      images_search,
-      clusters_search,
-      clusters_kubernetes_search,
-    } = docker
+    const { app, container } = this.props
+    const { images_search, docker_search, kubernetes_search } = container
     const { langs } = app
 
     const {
@@ -163,7 +156,7 @@ class Deploys extends Component {
       deploys_limit: pageSize,
       deploys_total: total,
       deploys_page: current,
-    } = docker
+    } = container
 
     return (
       <Layout title="Deploys">
@@ -173,7 +166,7 @@ class Deploys extends Component {
               return (
                 <Row gutter={16}>
                   <Col span={12}>
-                    <p>{langs['docker_deploy']}</p>
+                    <p>{langs['container_deploy']}</p>
                   </Col>
                   <Col
                     span={12}
@@ -207,8 +200,8 @@ class Deploys extends Component {
           langs={langs}
           data={this.state.data}
           images={images_search}
-          clusters_swarm={clusters_search}
-          clusters_kubernetes={clusters_kubernetes_search}
+          docker={docker_search}
+          kubernetes={kubernetes_search}
           visible={this.state.visible}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}

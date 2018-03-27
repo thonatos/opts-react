@@ -5,9 +5,9 @@ const { TextArea } = Input
 const FormItem = Form.Item
 
 @Form.create()
-class Deploy extends Component {
+class ClusterForm extends Component {
   render() {
-    const { form, title, visible, onCancel, onCreate } = this.props
+    const { langs, form, title, visible, onCancel, onCreate } = this.props
     const { getFieldDecorator } = form
 
     return (
@@ -21,7 +21,7 @@ class Deploy extends Component {
         <Form layout="vertical">
           <Row gutter={16}>
             <Col span={12}>
-              <FormItem label="Name">
+              <FormItem label={langs['cluster_name']}>
                 {getFieldDecorator('name', {
                   initialValue: '',
                   rules: [{ required: true, message: 'name can not be null' }],
@@ -29,7 +29,7 @@ class Deploy extends Component {
               </FormItem>
             </Col>
             <Col span={12}>
-              <FormItem label="Region">
+              <FormItem label={langs['cluster_region']}>
                 {getFieldDecorator('region', {
                   initialValue: '',
                   rules: [
@@ -39,30 +39,8 @@ class Deploy extends Component {
               </FormItem>
             </Col>
 
-            <Col span={12}>
-              <FormItem label="Namespace">
-                {getFieldDecorator('mamespace', {
-                  initialValue: 'default',
-                  rules: [
-                    { required: true, message: 'namespace can not be null' },
-                  ],
-                })(<Input />)}
-              </FormItem>
-            </Col>
-
-            <Col span={12}>
-              <FormItem label="Version">
-                {getFieldDecorator('version', {
-                  initialValue: '1.7',
-                  rules: [
-                    { required: true, message: 'version can not be null' },
-                  ],
-                })(<Input />)}
-              </FormItem>
-            </Col>
-
             <Col span={24}>
-              <FormItem label="Host">
+              <FormItem label={langs['cluster_host']}>
                 {getFieldDecorator('host', {
                   initialValue: '',
                   rules: [
@@ -77,7 +55,7 @@ class Deploy extends Component {
             </Col>
 
             <Col span={24}>
-              <FormItem label="ca">
+              <FormItem label={langs['cluster_ca']}>
                 {getFieldDecorator('ca', {
                   initialValue: '',
                   rules: [{ required: true, message: 'ca can not be null' }],
@@ -86,38 +64,20 @@ class Deploy extends Component {
             </Col>
 
             <Col span={24}>
-              <FormItem label="key">
+              <FormItem label={langs['cluster_key']}>
                 {getFieldDecorator('key', {
                   initialValue: '',
-                  rules: [{ required: false, message: 'key is optional' }],
+                  rules: [{ required: true, message: 'key can not be null' }],
                 })(<TextArea />)}
               </FormItem>
             </Col>
 
             <Col span={24}>
-              <FormItem label="cert">
+              <FormItem label={langs['cluster_cert']}>
                 {getFieldDecorator('cert', {
                   initialValue: '',
-                  rules: [{ required: false, message: 'cert is optional' }],
+                  rules: [{ required: true, message: 'cert can not be null' }],
                 })(<TextArea />)}
-              </FormItem>
-            </Col>
-
-            <Col span={12}>
-              <FormItem label="User">
-                {getFieldDecorator('user', {
-                  initialValue: '',
-                  rules: [{ required: false, message: 'user is optional' }],
-                })(<Input />)}
-              </FormItem>
-            </Col>
-
-            <Col span={12}>
-              <FormItem label="Password">
-                {getFieldDecorator('pass', {
-                  initialValue: '',
-                  rules: [{ required: false, message: 'password is optional' }],
-                })(<Input />)}
               </FormItem>
             </Col>
           </Row>
@@ -127,4 +87,4 @@ class Deploy extends Component {
   }
 }
 
-export default Deploy
+export default ClusterForm

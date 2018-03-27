@@ -4,12 +4,15 @@ import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/mbo.css'
 import 'codemirror/mode/yaml/yaml'
 
+const style = {
+  lineHeight: '2',
+}
+
 class Editor extends Component {
   constructor(props) {
     super(props)
-    const value = this.props.value || ''
     this.state = {
-      value,
+      value: this.props.value || '',
     }
   }
 
@@ -22,6 +25,13 @@ class Editor extends Component {
     }
   }
 
+  triggerChange = changedValue => {
+    const onChange = this.props.onChange
+    if (onChange) {
+      onChange(changedValue)
+    }
+  }
+
   handleChange = (editor, data, value) => {
     if (!('value' in this.props)) {
       this.setState({
@@ -31,28 +41,23 @@ class Editor extends Component {
     this.triggerChange(value)
   }
 
-  triggerChange = changedValue => {
-    const onChange = this.props.onChange
-    if (onChange) {
-      onChange(changedValue)
-    }
+  handleBeforeChange = (editor, data, value) => {
+    this.setState({
+      value: value,
+    })
   }
 
   render() {
     const { options } = this.props
 
     return (
-      <div style={{ lineHeight: '2' }}>
+      <div style={style}>
         <CodeMirror
           ref="editor"
           value={this.state.value}
           options={options}
-          onBeforeChange={(editor, data, value) => {
-            this.setState({
-              value: value,
-            })
-          }}
           onChange={this.handleChange}
+          onBeforeChange={this.handleBeforeChange}
         />
       </div>
     )

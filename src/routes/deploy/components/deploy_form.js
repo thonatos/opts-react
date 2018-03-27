@@ -38,7 +38,7 @@ class Deploy extends Component {
       env: 0,
       image: 0,
     },
-    platform: 'docker_swarm',
+    platform: 'docker',
   }
 
   reset = () => {
@@ -92,8 +92,7 @@ class Deploy extends Component {
   }
 
   onSearch = (...args) => {
-    const { onSearch: handleSearch } = this.props
-    handleSearch(...args)
+    this.props.onSearch(...args)
   }
 
   getFormItems = (type, initialValues = []) => {
@@ -201,20 +200,14 @@ class Deploy extends Component {
   }
 
   getClusterItem = (cluster = {}) => {
-    const { clusters_swarm, clusters_kubernetes, form } = this.props
+    const { docker, kubernetes, form } = this.props
     const { getFieldDecorator } = form
-    const clusters =
-      this.state.platform === 'docker_swarm'
-        ? clusters_swarm
-        : clusters_kubernetes
+    const clusters = this.state.platform === 'docker' ? docker : kubernetes
     const { cluster_id: _id, name } = cluster
     _id && clusters.push({ _id, name })
     const selects = uniqby(clusters, '_id')
     const selected = (_id && `${_id}#${name}`) || ''
-    const storage =
-      this.state.platform === 'docker_swarm'
-        ? 'clusters'
-        : 'clusters_kubernetes'
+    const storage = this.state.platform === 'docker' ? 'docker' : 'kubernetes'
     return (
       <FormItem label="Cluster">
         {getFieldDecorator('cluster', {
@@ -331,7 +324,7 @@ class Deploy extends Component {
                       rules: [{ required: true }],
                     })(
                       <Select onChange={this.onPlatformChange}>
-                        <Option value="docker_swarm">Docker Swarm</Option>
+                        <Option value="docker">Docker</Option>
                         <Option value="kubernetes">Kubernetes</Option>
                       </Select>
                     )}

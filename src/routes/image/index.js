@@ -4,36 +4,35 @@ import { observer, inject } from 'mobx-react'
 import { Basic as Layout } from '~/layouts/'
 import { ImageTable } from './components/'
 
-@inject('app', 'docker')
+@inject('app', 'container')
 @observer
-class Images extends Component {
+class Image extends Component {
   componentDidMount() {
     this.load()
   }
 
   load = current => {
-    const { docker } = this.props
-    docker.index('images', {
+    this.props.container.index('images', {
       pageNext: current,
     })
   }
 
   render() {
-    const { app, docker } = this.props
+    const { app, container } = this.props
     const {
       loading,
       images: data,
       images_total: total,
       images_page: current,
       images_limit: pageSize,
-    } = docker
+    } = container
     const { langs } = app
 
     return (
       <Layout title="Images">
         <ImageTable
           {...{
-            title: 'docker_image',
+            title: 'container_image',
             load: this.load,
             langs,
             data,
@@ -50,4 +49,4 @@ class Images extends Component {
   }
 }
 
-export default Images
+export default Image

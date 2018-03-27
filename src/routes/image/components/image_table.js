@@ -43,7 +43,7 @@ class ImageTable extends Component {
         },
       },
       {
-        title: langs['cluster_action'],
+        title: langs['actions'],
         dataIndex: 'actions',
         key: 'actions',
         render: (text, record) => {

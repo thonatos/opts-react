@@ -75,14 +75,14 @@ class AppTable extends Component {
         },
       },
       {
-        title: langs['app_services'],
+        title: langs['app_service'],
         dataIndex: 'service',
         key: 'service',
         render: (text, record) => {
           console.log(record)
           return (
             <Button onClick={this.showServices.bind(null, record)}>
-              Service
+              {langs['app_service']}
             </Button>
           )
         },

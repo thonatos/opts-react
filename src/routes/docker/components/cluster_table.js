@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Table, Button } from 'antd'
-// import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import moment from 'moment'
 
 class ClusterTable extends Component {
@@ -26,11 +26,6 @@ class ClusterTable extends Component {
         key: 'region',
       },
       {
-        title: langs['cluster_namespace'],
-        dataIndex: 'namespace',
-        key: 'namespace',
-      },
-      {
         title: langs['created_at'],
         dataIndex: 'created_at',
         key: 'created_at',
@@ -39,18 +34,16 @@ class ClusterTable extends Component {
         },
       },
       {
-        title: langs['cluster_action'],
+        title: langs['actions'],
         dataIndex: 'actions',
         key: 'actions',
         render: (text, record) => {
           const { _id: id } = record
           return (
             <div>
-              {
-                //   <Button>
-                //   <Link to={`/clusters/${id}`}>{langs['cluster_apps']}</Link>
-                // </Button>
-              }
+              <Button>
+                <Link to={`/docker/${id}`}>{langs['cluster_apps']}</Link>
+              </Button>
 
               <Button
                 type="danger"
@@ -61,7 +54,7 @@ class ClusterTable extends Component {
                   destroy(id)
                 }}
               >
-                Delete
+                {langs['action_delete']}
               </Button>
             </div>
           )

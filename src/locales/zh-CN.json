@@ -1,22 +1,29 @@
 {
-  "framework": "React",
-  "administrator": "苏依",
-  "docker_cluster": "集群",
-  "docker_deploy": "部署",
-  "docker_image": "镜像",
-  "docker_image_tag": "镜像标签",
+  "container_cluster": "集群",
+  "container_deploy": "部署",
+  "container_image": "镜像",
+  "container_image_tag": "镜像标签",
+  "container_docker": "Docker",
+  "container_kubernetes": "Kubernets",
 
+  "actions": "操作",
   "action_create": "创建",
   "action_edit": "编辑",
   "action_delete": "删除",
   "updated_at": "更新时间",
   "created_at": "创建时间",
 
-  "cluster_name": "集群名称",
-  "cluster_region": "所在区域",
+  "cluster_name": "名称",
+  "cluster_region": "区域",
+  "cluster_version": "版本",
   "cluster_namespace": "命名空间",
-  "cluster_action": "操作",
-  "cluster_apps": "集群应用",
+  "cluster_apps": "应用",
+  "cluster_host": "主机",
+  "cluster_ca": "证书局",
+  "cluster_key": "密钥",
+  "cluster_cert": "证书",
+  "cluster_user": "用户",
+  "cluster_pass": "密码",
 
   "app_name": "名称",
   "app_description": "描述",
@@ -44,7 +51,5 @@
   "deploy": "部署",
   "deploy_app": "应用名称",
   "deploy_cluster": "集群ID",
-  "deploy_enabled": "启用",
-  "deploy_actions": "操作",
-  "deploy_created_at": "创建时间"
+  "deploy_enabled": "启用"
 }

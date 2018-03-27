@@ -4,17 +4,17 @@ import { observer, inject } from 'mobx-react'
 import { Basic as Layout } from '~/layouts/'
 import { TagTable } from './components/'
 
-@inject('docker', 'app')
+@inject('container', 'app')
 @observer
-class Cluster extends Component {
+class ImageTag extends Component {
   componentDidMount() {
     this.load()
   }
 
   load = current => {
-    const { docker, match } = this.props
+    const { container, match } = this.props
     const id = match.params.id
-    docker.index('images', {
+    container.index('images', {
       id,
       storage: 'image_tags',
       pageNext: current,
@@ -22,7 +22,7 @@ class Cluster extends Component {
   }
 
   render() {
-    const { docker, app } = this.props
+    const { container, app } = this.props
     const { langs } = app
     const {
       loading,
@@ -30,13 +30,13 @@ class Cluster extends Component {
       image_tags_total: total,
       image_tags_page: current,
       image_tags_limit: pageSize,
-    } = docker
+    } = container
 
     return (
       <Layout title="Image Tags">
         <TagTable
           {...{
-            title: 'docker_image_tag',
+            title: 'container_image_tag',
             load: this.load,
             langs,
             data,
@@ -53,4 +53,4 @@ class Cluster extends Component {
   }
 }
 
-export default Cluster
+export default ImageTag

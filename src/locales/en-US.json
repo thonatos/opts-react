@@ -1,11 +1,12 @@
 {
-  "framework": "React",
-  "administrator": "Suyi",
-  "docker_cluster": "Docker Cluster",
-  "docker_deploy": "Docker Deploy",
-  "docker_image": "Docker Image",
-  "docker_image_tag": "Docker Image Tag",
+  "container_cluster": "Cluster",
+  "container_deploy": "Deploy",
+  "container_image": "Image",
+  "container_image_tag": "Image Tag",
+  "container_docker": "Docker",
+  "container_kubernetes": "Kubernets",
 
+  "actions": "Actions",
   "action_create": "Create",
   "action_edit": "Edit",
   "action_delete": "Delete",
@@ -14,9 +15,15 @@
 
   "cluster_name": "Name",
   "cluster_region": "Region",
+  "cluster_version": "Version",
   "cluster_namespace": "Namespace",
-  "cluster_action": "Actions",
   "cluster_apps": "Apps",
+  "cluster_host": "Host",
+  "cluster_ca": "CA",
+  "cluster_key": "Key",
+  "cluster_cert": "Cert",
+  "cluster_user": "Username",
+  "cluster_pass": "Password",
 
   "app_name": "Name",
   "app_description": "Description",
@@ -45,7 +52,5 @@
   "deploy_add": "Add Deploy",
   "deploy_app": "App",
   "deploy_cluster": "Cluster ID",
-  "deploy_enabled": "Enabled",
-  "deploy_actions": "Actions",
-  "deploy_created_at": "Created At"
+  "deploy_enabled": "Enabled"
 }

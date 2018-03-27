@@ -10,15 +10,15 @@ const getStorageProps = store => {
 class State {
   @observable loading = false
 
-  @observable _clusters = []
-  @observable clusters_total = 0
-  @observable clusters_page = 1
-  @observable clusters_limit = 2
+  @observable _docker = []
+  @observable docker_total = 0
+  @observable docker_page = 1
+  @observable docker_limit = 2
 
-  @observable _clusters_kubernetes = []
-  @observable clusters_kubernetes_total = 0
-  @observable clusters_kubernetes_page = 1
-  @observable clusters_kubernetes_limit = 5
+  @observable _kubernetes = []
+  @observable kubernetes_total = 0
+  @observable kubernetes_page = 1
+  @observable kubernetes_limit = 5
 
   @observable _images = []
   @observable images_total = 0
@@ -36,8 +36,8 @@ class State {
   @observable image_tags_limit = 10
 
   @observable _images_search = []
-  @observable _clusters_search = []
-  @observable _clusters_kubernetes_search = []
+  @observable _docker_search = []
+  @observable _kubernetes_search = []
 
   @observable _apps = new Map()
 
@@ -101,7 +101,7 @@ class State {
 
   @action
   index = async (store, options) => {
-    let url = `/api/docker/${store}`
+    let url = `/api/container/${store}`
     const { id, storage, pagination = true } = options
 
     if (id) {
@@ -125,7 +125,7 @@ class State {
   create = async (store, options) => {
     try {
       const { data } = await this.request(
-        `/api/docker/${store}`,
+        `/api/container/${store}`,
         'post',
         options
       )
@@ -138,7 +138,7 @@ class State {
 
   @action
   update = async (store, { id, ...rest }) => {
-    let url = `/api/docker/${store}`
+    let url = `/api/container/${store}`
     let method = 'post'
 
     if (id) {
@@ -159,7 +159,7 @@ class State {
   destroy = async (store, id) => {
     try {
       const { data } = await this.request(
-        `/api/docker/${store}/${id}`,
+        `/api/container/${store}/${id}`,
         'delete'
       )
       return data
@@ -171,20 +171,23 @@ class State {
 
   @action
   search = async (store, name) => {
-    const { data } = await this.request(`/api/docker/${store}?s=${name}`, 'get')
+    const { data } = await this.request(
+      `/api/container/${store}?s=${name}`,
+      'get'
+    )
     this[`_${store}_search`] = data.data || []
   }
 
   // Computed
 
   @computed
-  get clusters() {
-    return toJS(this._clusters)
+  get docker() {
+    return toJS(this._docker)
   }
 
   @computed
-  get clusters_kubernetes() {
-    return toJS(this._clusters_kubernetes)
+  get kubernetes() {
+    return toJS(this._kubernetes)
   }
 
   @computed
@@ -214,13 +217,13 @@ class State {
   }
 
   @computed
-  get clusters_search() {
-    return toJS(this._clusters_search)
+  get docker_search() {
+    return toJS(this._docker_search)
   }
 
   @computed
-  get clusters_kubernetes_search() {
-    return toJS(this._clusters_kubernetes_search)
+  get kubernetes_search() {
+    return toJS(this._kubernetes_search)
   }
 
   @computed

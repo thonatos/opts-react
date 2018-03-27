@@ -61,7 +61,7 @@ class DeployTable extends Component {
         },
       },
       {
-        title: langs['deploy_actions'],
+        title: langs['actions'],
         dataIndex: 'actions',
         key: 'actions',
         render: (text, record) => {

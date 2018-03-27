@@ -12,9 +12,9 @@ import {
   Deploy,
   Image,
   ImageTag,
-  ClusterSwarm,
-  ClusterSwarmDetail,
-  ClusterKubernetes,
+  Docker,
+  DockerDetail,
+  Kubernetes,
 } from '~/routes/'
 import { Protected } from '~/components/'
 
@@ -34,18 +34,14 @@ class Wrap extends Component {
             <Protected path="/images/:id" component={ImageTag} exactly={true} />
             <Protected path="/images" component={Image} />
             <Protected
-              path="/clusters-swarm/:id"
-              component={ClusterSwarmDetail}
+              path="/docker/:id"
+              component={DockerDetail}
               exactly={true}
             />
+            <Protected path="/docker" component={Docker} exactly={true} />
             <Protected
-              path="/clusters-swarm"
-              component={ClusterSwarm}
-              exactly={true}
-            />
-            <Protected
-              path="/clusters-kubernetes"
-              component={ClusterKubernetes}
+              path="/kubernetes"
+              component={Kubernetes}
               exactly={true}
             />
           </Switch>

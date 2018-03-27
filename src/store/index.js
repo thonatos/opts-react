@@ -1,5 +1,5 @@
 import App from './app'
 import Auth from './auth'
-import Docker from './docker'
+import Container from './container'
 
-export { App, Auth, Docker }
+export { App, Auth, Container }
