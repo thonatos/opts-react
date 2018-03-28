@@ -4,7 +4,7 @@
   "container_image": "镜像",
   "container_image_tag": "镜像标签",
   "container_docker": "Docker",
-  "container_kubernetes": "Kubernets",
+  "container_kubernetes": "Kubernetes",
 
   "actions": "操作",
   "action_create": "创建",

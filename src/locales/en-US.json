@@ -4,7 +4,7 @@
   "container_image": "Image",
   "container_image_tag": "Image Tag",
   "container_docker": "Docker",
-  "container_kubernetes": "Kubernets",
+  "container_kubernetes": "Kubernetes",
 
   "actions": "Actions",
   "action_create": "Create",
